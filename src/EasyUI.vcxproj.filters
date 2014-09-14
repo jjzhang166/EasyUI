@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{f3da32f3-edab-435d-a449-341cd643a21b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pugixml">
+      <UniqueIdentifier>{23fa5de5-64de-48b2-b0c1-ff3f8a8880e3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml\pugiconfig.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml\pugixml.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ContainerWindowBase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EasyUI.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MessageHandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WindowBase.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\BrushFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DuiButton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DuiLabel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\FontFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GdiplusHelper.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GdiplusInit.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\HoriLayout.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ImageFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ParserHelper.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PenFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SmartDC.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TopHWNDWindow.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\VertLayout.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WindowFactory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pugixml\pugixml.cpp">
+      <Filter>pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="ContainerWindowBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BrushFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DuiButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DuiLabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FontFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GdiplusHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HoriLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParserHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PenFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TopHWNDWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VertLayout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

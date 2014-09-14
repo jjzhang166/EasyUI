@@ -1,0 +1,7 @@
+1.本项目为windows界面库，主要采用DUI方式实现
+
+2.本项目为开源项目，实现代码主要参考DUILIB
+
+3.include目录下是需要包含的头文件，src目录下是实现文件，目标文件将会在output\bin目录下，中间生成文件存放在output\$(configname)\目录下
+
+
