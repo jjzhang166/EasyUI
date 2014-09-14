@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window rect="-380,-260,380,260" align="center" caption="30" thickframe="8,8,8,8" minsize="380,260">
+	<vert_layout align="full" bk_color="#FF0000FF">
+		<hori_layout height="70" child_align="center" bk_img="D:\\Project\\EasyUI\\TestApp1\\top_middle.bmp">
+			<button rect="-43,0,43,21" over_caption="true" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+			<button rect="-86,0,43,21" over_caption="true" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+			<button rect="-129,0,43,21" over_caption="true" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+		</hori_layout>
+		<hori_layout>
+			<vert_layout name="navigateBar" width="150" bk_color="#FFFFFFFF">
+				<button width="43" height="21" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+				<button width="43" height="21" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+				<button width="43" height="21" three_state_img="D:\\Project\\EasyUI\\TestApp1\\close_btn.bmp"/>
+			</vert_layout>
+			<vert_layout>
+				<label bk_color="#FFEDF3D7" border_width="2" border_color="#FFFF0000" name="htmlView" text="Optional. Integer that specifies the style of the typeface. This value must be an element of the   enumeration or the result of a bitwise OR applied to two or more of these elements. For example, FontStyleBold | FontStyleUnderline | FontStyleStrikeout sets the style as a combination of the three styles. The default value is FontStyleRegular."/>
+			</vert_layout>
+		</hori_layout>
+		<hori_layout height="78">
+			<label align="center" float="true" size="300,78" bk_color="#FFFF8787"/>
+		</hori_layout>
+	</vert_layout>
+	
+</window>
