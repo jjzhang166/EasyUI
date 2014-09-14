@@ -81,6 +81,7 @@
     <ClInclude Include="..\include\DuiButton.h" />
     <ClInclude Include="..\include\DuiLabel.h" />
     <ClInclude Include="..\include\EasyUI.h" />
+    <ClInclude Include="..\include\EasyUIApp.h" />
     <ClInclude Include="..\include\FontFactory.h" />
     <ClInclude Include="..\include\GdiplusHelper.h" />
     <ClInclude Include="..\include\GdiplusInit.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="ContainerWindowBase.cpp" />
     <ClCompile Include="DuiButton.cpp" />
     <ClCompile Include="DuiLabel.cpp" />
+    <ClCompile Include="EasyUIApp.cpp" />
     <ClCompile Include="FontFactory.cpp" />
     <ClCompile Include="GdiplusHelper.cpp" />
     <ClCompile Include="HoriLayout.cpp" />

@@ -11,18 +11,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	CGdiplusInit _gpInit;
+	CEasyUIApp* easyApp = CEasyUIApp::GetInst();
+	easyApp->InitApp();
 
 	CTopHWNDWindow topWnd;
 	topWnd.Create(NULL,_T("D:\\Project\\EasyUI\\TestApp1\\test.xml"));
 	topWnd.ShowWindow(SW_SHOW);
 	topWnd.UpdateWindow();
 
-	MSG msg;
-	while(::GetMessage(&msg,NULL,0,0)){
-		::TranslateMessage(&msg);
-		::DispatchMessage(&msg);
-	}
-
- 	return (0);
+	return easyApp->Run();
 }

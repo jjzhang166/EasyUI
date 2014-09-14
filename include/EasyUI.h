@@ -49,6 +49,7 @@ class EASY_UI_API CWindowBase;
 #include <SmartDC.h>
 #include <WindowBase.h>
 #include <ContainerWindowBase.h>
+#include <EasyUIApp.h>
 
 #include <BrushFactory.h>
 #include <PenFactory.h>

@@ -87,6 +87,9 @@
     <ClInclude Include="..\include\WindowFactory.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\EasyUIApp.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -138,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EasyUIApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
