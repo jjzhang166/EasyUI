@@ -2,9 +2,9 @@
 
 using namespace Gdiplus;
 
-CWindowBase::CWindowBase(CWindowBase* pParent)
+CUIWindowBase::CUIWindowBase(CUIWindowBase* pParent)
 	: m_pParent(pParent)
-	, m_pRoot(pParent?pParent->m_pRoot:NULL)
+	, m_pRoot(pParent?pParent->m_pRoot:this)
 	, m_bFloat(false)
 	, m_bVisible(true)
 	, m_bPlaceHolder(false)
@@ -13,88 +13,108 @@ CWindowBase::CWindowBase(CWindowBase* pParent)
 	, m_nBorderWidth(0)
 	, m_nFontSize(16)
 	, m_strFontFamily(_T("Arial"))
-	, m_fontColor(Color::Black)
+	, m_textColor(Color::Black)
 	, m_bBold(false)
+	, m_bItalic(false)
 	, m_bUnderline(false)
 	, m_bStrikout(false)
+	, m_bMultiLine(true)
 	, m_bEnable(true)
 	, m_bOverCaption(false)
 {
 }
 
 
-CWindowBase::~CWindowBase(void)
+CUIWindowBase::~CUIWindowBase(void)
 {
 	m_pParent = NULL;
 }
 
-std::wstring CWindowBase::GetName()
+std::wstring CUIWindowBase::GetName()
 {
 	return m_strName;
 }
 
-void CWindowBase::SetName( LPCTSTR szName )
+void CUIWindowBase::SetName( LPCTSTR szName )
 {
 	m_strName = szName;
 }
 
-bool CWindowBase::IsFloat()
+bool CUIWindowBase::IsFloat()
 {
 	return m_bFloat;
 }
 
-bool CWindowBase::IsPlaceHolder()
+bool CUIWindowBase::IsPlaceHolder()
 {
 	return m_bPlaceHolder;
 }
 
-void CWindowBase::GetRect(CRect& rcWnd)
+void CUIWindowBase::GetRect(CRect& rcWnd)
 {
 	rcWnd = m_rcWnd;
 }
 
-void CWindowBase::SetRect( const CRect& rcWnd )
+void CUIWindowBase::SetRect( const CRect& rcWnd )
 {
 	m_rcWnd = rcWnd;
 }
 
-bool CWindowBase::IsVisible()
+bool CUIWindowBase::IsVisible()
 {
 	return m_bVisible;
 }
 
-void CWindowBase::GetBgImg( std::wstring& strBgImg )
+void CUIWindowBase::GetBkImg( std::wstring& strBgImg )
 {
 	strBgImg = m_strBkImg;
 }
 
-void CWindowBase::SetBgImg( const std::wstring& strBgImg )
+void CUIWindowBase::SetBkImg( const std::wstring& strBgImg )
 {
 	m_strBkImg = strBgImg;
 }
 
-void CWindowBase::GetBgClr( Gdiplus::ARGB& clr )
+Gdiplus::ARGB CUIWindowBase::GetBkClr()
 {
-	clr = m_bkColor;
+	return m_bkColor;
 }
 
-void CWindowBase::SetBgClr( const Gdiplus::ARGB& clr )
+void CUIWindowBase::SetBkClr( const Gdiplus::ARGB& clr )
 {
 	m_bkColor = clr;
 }
 
-bool CWindowBase::IsOverCaption()
+void CUIWindowBase::SetMultiLine( bool bMultiLine )
+{
+	if(!bMultiLine){
+		m_stringFormat.SetFormatFlags(StringFormatFlagsNoWrap);
+	}
+	else{
+		m_stringFormat.SetFormatFlags(m_stringFormat.GetFormatFlags()&(~StringFormatFlagsNoWrap));
+	}
+
+	m_bMultiLine = bMultiLine;
+}
+
+void CUIWindowBase::SetTextAlign(LPCTSTR szTextAlign)
+{
+	m_strTextAlign = szTextAlign;
+	CalcTextFormat(m_strTextAlign, m_stringFormat);
+}
+
+bool CUIWindowBase::IsOverCaption()
 {
 	return m_bOverCaption;
 }
 
-BOOL CWindowBase::Create( pugi::xml_node& node )
+BOOL CUIWindowBase::Create( pugi::xml_node& node )
 {
 	ParseAttribute(node);
 	return TRUE;
 }
 
-BOOL CWindowBase::ParseAttribute( pugi::xml_node& node )
+BOOL CUIWindowBase::ParseAttribute( pugi::xml_node& node )
 {
 	pugi::xml_attribute attr;
 	attr = node.attribute(_T("name"));
@@ -222,12 +242,17 @@ BOOL CWindowBase::ParseAttribute( pugi::xml_node& node )
 		m_nFontSize = _ttoi(attr.as_string());
 	}
 
-	attr = node.attribute(_T("font_color"));
+	attr = node.attribute(_T("text_color"));
 	if(attr){
-		ParserHelper::String2ARGB(attr.as_string(),m_fontColor);
+		ParserHelper::String2ARGB(attr.as_string(),m_textColor);
 	}
 
 	attr = node.attribute(_T("bold"));
+	if(attr){
+		m_bItalic = ( _tcsicmp(attr.as_string(),_T("true"))==0 );
+	}
+
+	attr = node.attribute(_T("italic"));
 	if(attr){
 		m_bBold = ( _tcsicmp(attr.as_string(),_T("true"))==0 );
 	}
@@ -242,6 +267,22 @@ BOOL CWindowBase::ParseAttribute( pugi::xml_node& node )
 		m_bStrikout = ( _tcsicmp(attr.as_string(),_T("true"))==0 );
 	}
 
+	//‘§≥ı ºªØstringformat
+	{
+		attr = node.attribute(_T("text_align"));
+		if(attr){
+			m_strTextAlign = attr.as_string();
+		}
+
+		attr = node.attribute(_T("multi_line"));
+		if(attr){
+			m_bMultiLine = ( _tcsicmp(attr.as_string(),_T("true"))==0 );
+		}
+
+		SetMultiLine(m_bMultiLine);
+		SetTextAlign(m_strTextAlign.c_str());
+	}
+	
 	attr = node.attribute(_T("enable"));
 	if(attr){
 		m_bEnable = ( _tcsicmp(attr.as_string(),_T("true"))==0 );
@@ -255,72 +296,72 @@ BOOL CWindowBase::ParseAttribute( pugi::xml_node& node )
 	return TRUE;
 }
 
-void CWindowBase::GetInitRect( CRect& rcInit )
+void CUIWindowBase::GetInitRect( CRect& rcInit )
 {
 	rcInit = m_rcInit;
 }
 
-void CWindowBase::SetInitRect( const CRect& rcInit )
+void CUIWindowBase::SetInitRect( const CRect& rcInit )
 {
 	m_rcInit = rcInit;
 }
 
-void CWindowBase::GetPadding( CRect& rcPadding )
+void CUIWindowBase::GetPadding( CRect& rcPadding )
 {
 	rcPadding = m_rcPadding;
 }
 
-void CWindowBase::SetPadding( const CRect& rcPadding )
+void CUIWindowBase::SetPadding( const CRect& rcPadding )
 {
 	m_rcPadding = rcPadding;
 }
 
-void CWindowBase::GetMargin( CRect& rcMargin )
+void CUIWindowBase::GetMargin( CRect& rcMargin )
 {
 	rcMargin = m_rcMargin;
 }
 
-void CWindowBase::SetMargin( const CRect& rcMargin )
+void CUIWindowBase::SetMargin( const CRect& rcMargin )
 {
 	m_rcMargin = rcMargin;
 }
 
-void CWindowBase::GetMinSize( CSize& minSz )
+void CUIWindowBase::GetMinSize( CSize& minSz )
 {
 	minSz = m_minSize;
 }
 
-void CWindowBase::GetMaxSize( CSize& maxSz )
+void CUIWindowBase::GetMaxSize( CSize& maxSz )
 {
 	maxSz = m_maxSize;
 }
 
-CWindowBase* CWindowBase::GetParent()
+CUIWindowBase* CUIWindowBase::GetParent()
 {
 	return m_pParent;
 }
 
-void CWindowBase::SetParent( CWindowBase* pParent )
+void CUIWindowBase::SetParent( CUIWindowBase* pParent )
 {
 	m_pParent = pParent;
 }
 
-CWindowBase* CWindowBase::GetRoot()
+CUIWindowBase* CUIWindowBase::GetRoot()
 {
 	return m_pRoot;
 }
 
-HWND CWindowBase::GetRootHandle()
+HWND CUIWindowBase::GetRootHandle()
 {
-	CTopHWNDWindow* pTop = dynamic_cast<CTopHWNDWindow*>(GetRoot());
+	CUITopWindow* pTop = dynamic_cast<CUITopWindow*>(GetRoot());
 	return pTop ? pTop->m_hWnd : NULL;
 }
 
-bool CWindowBase::SetCapture()
+bool CUIWindowBase::SetCapture()
 {
 	bool bOk = false;
 	if(!GetCapture()){
-		CTopHWNDWindow* pTop = dynamic_cast<CTopHWNDWindow*>(GetRoot());
+		CUITopWindow* pTop = dynamic_cast<CUITopWindow*>(GetRoot());
 		if(pTop){
 			pTop->SetCaptureWindow(this);
 			bOk = true;
@@ -330,10 +371,10 @@ bool CWindowBase::SetCapture()
 	return bOk;
 }
 
-bool CWindowBase::ReleaseCapture()
+bool CUIWindowBase::ReleaseCapture()
 {
 	bool bOk = false;
-	CTopHWNDWindow* pTop = dynamic_cast<CTopHWNDWindow*>(GetRoot());
+	CUITopWindow* pTop = dynamic_cast<CUITopWindow*>(GetRoot());
 	if(pTop && pTop->GetCaptureWindow()==this){
 		pTop->SetCaptureWindow(NULL);
 		bOk = true;
@@ -342,12 +383,12 @@ bool CWindowBase::ReleaseCapture()
 	return bOk;
 }
 
-BOOL CWindowBase::MoveWindow( LPRECT lprc )
+BOOL CUIWindowBase::MoveWindow( LPRECT lprc )
 {
 	return MoveWindow(lprc->left,lprc->top,lprc->right-lprc->left,lprc->bottom-lprc->top);
 }
 
-BOOL CWindowBase::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
+BOOL CUIWindowBase::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
 {
 	CRect rcOld = m_rcWnd;
 
@@ -361,7 +402,7 @@ BOOL CWindowBase::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
 	return TRUE;
 }
 
-bool CWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcNew)
+bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcNew)
 {
 	const int nWidth = rcCtrlInit.Width()>=0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();
 	const int nHeight = rcCtrlInit.Height()>=0 ? rcCtrlInit.Height() : rcParent.Height() + rcCtrlInit.Height();
@@ -456,7 +497,7 @@ bool CWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrl
 	return true;
 }
 
-bool CWindowBase::CalcWindowFloatPos(CRect& rcWnd)
+bool CUIWindowBase::CalcWindowFloatPos(CRect& rcWnd)
 {
 	CRect rcParent;
 	if(m_pParent){
@@ -468,44 +509,89 @@ bool CWindowBase::CalcWindowFloatPos(CRect& rcWnd)
 	return CalcWindowFloatPos(rcParent, m_rcInit, m_strAlign, rcWnd);
 }
 
-void CWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
+bool CUIWindowBase::CalcTextFormat( const std::wstring strTextAlign, Gdiplus::StringFormat& format )
+{
+	if(strTextAlign.empty() || strTextAlign == _T("lefttop")){
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
+		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+	}
+	else if(strTextAlign == _T("left")){
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
+		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+	}
+	else if(strTextAlign == _T("leftbottom")){
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
+		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+	}
+	else if(strTextAlign == _T("bottom")){
+		format.SetAlignment(Gdiplus::StringAlignmentCenter);
+		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+	}
+	else if(strTextAlign == _T("rightbottom")){
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+	}
+	else if(strTextAlign == _T("right")){
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+	}
+	else if(strTextAlign == _T("righttop")){
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+	}
+	else if(strTextAlign == _T("top")){
+		format.SetAlignment(Gdiplus::StringAlignmentCenter);
+		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+	}
+	else if(strTextAlign == _T("center")){
+		format.SetAlignment(Gdiplus::StringAlignmentCenter);
+		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+	}
+	else{
+		ATLASSERT(FALSE);
+	}
+
+	return true;
+}
+
+void CUIWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
 {
 	PaintBkGnd(pGraphics);
 	PaintBorder(pGraphics);
 	PaintText(pGraphics);
 }
 
-void CWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics )
 {
 	if(!m_strBkImg.empty()){
 		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str());
-		pGraphics->DrawImage(pImage,GdiplusHelper::EasyRect(m_rcWnd),0,0,pImage->GetWidth(),pImage->GetHeight(),UnitPixel);
+		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRect(m_rcWnd),0,0,pImage->GetWidth(),pImage->GetHeight(),UnitPixel);
 	}
 	else{
-		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::EasyRect(m_rcWnd));
+		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRect(m_rcWnd));
 	}
 }
 
-void CWindowBase::PaintBorder( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintBorder( Gdiplus::Graphics* pGraphics )
 {
 	if(m_nBorderWidth){
 		Pen* pPen = CPenFactory::GetPen(m_borderColor,m_nBorderWidth);
 		pPen->SetAlignment(PenAlignmentInset);
-		pGraphics->DrawRectangle(pPen,GdiplusHelper::EasyRect(m_rcWnd));
+		pGraphics->DrawRectangle(pPen,GdiplusHelper::Rect2GPRect(m_rcWnd));
 		pPen->SetAlignment(PenAlignmentCenter);
 	}
 }
 
-void CWindowBase::PaintText( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintText( Gdiplus::Graphics* pGraphics )
 {
 	if(!m_strText.empty()){
 		Font* pFont = CFontFactory::GetFont(m_strFontFamily.c_str(),m_nFontSize,m_bBold,m_bUnderline,m_bStrikout);
-		Brush* pBrush = CBrushFactory::GetBrush(m_fontColor);
-		pGraphics->DrawString(m_strText.c_str(),-1,pFont,GdiplusHelper::EasyRectF(m_rcWnd),NULL,pBrush);
+		Brush* pBrush = CBrushFactory::GetBrush(m_textColor);
+		pGraphics->DrawString( m_strText.c_str(), -1,pFont, GdiplusHelper::Rect2GPRectF(m_rcWnd), &m_stringFormat, pBrush);
 	}
 }
 
-void CWindowBase::DUIInvalidate()
+void CUIWindowBase::UIInvalidate()
 {
 	InvalidateRect(GetRootHandle(),&m_rcWnd,TRUE);
 }

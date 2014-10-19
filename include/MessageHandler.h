@@ -19,7 +19,7 @@
 			}
 
 #define DUI_BMCLICK_HANDLER(szCtrlName,func)\
-			if(msg == BM_CLICK && duiMSG.pSrcCtrl && duiMSG.pSrcCtrl->GetName()==szCtrlName)\
+			if(uMsg == BM_CLICK && duiMSG.pSrcCtrl && duiMSG.pSrcCtrl->GetName()==szCtrlName)\
 			{\
 				func(duiMSG,bHandled);\
 				if(bHandled){\
@@ -37,22 +37,23 @@
 			return FALSE;\
 		}
 
-class EASY_UI_API CDuiMSG{
+class EASYUI_API CDuiMSG{
 public:
-	CDuiMSG(CWindowBase* pSrcCtrl, WPARAM wParam = 0, LPARAM lParam = 0){
+	CDuiMSG(CUIWindowBase* pSrcCtrl, WPARAM wParam = 0, LPARAM lParam = 0){
 		this->pSrcCtrl = pSrcCtrl;
 		this->wParam = wParam;
 		this->lParam = lParam;
 	}
 
-	CWindowBase* pSrcCtrl;
+	CUIWindowBase* pSrcCtrl;
 	WPARAM wParam;
 	LPARAM lParam;
 };
 
-#define WM_MOUSEENTER (WM_USER+1)
+#define WM_UIMESSAGE_START (WM_USER+1)
+#define WM_MOUSEENTER (WM_UIMESSAGE_START+1)
 
-class EASY_UI_API CMessageHandler
+class EASYUI_API CMessageHandler
 {
 public:
 	CMessageHandler(void){};
@@ -60,11 +61,11 @@ public:
 
 	virtual LRESULT SendDuiMessage(UINT uMsg, const CDuiMSG& duiMSG);
 
-	virtual LRESULT SendDuiMessage(UINT uMsg, CWindowBase* pSrcCtrl = NULL, WPARAM wParam = 0, LPARAM lParam = 0);
+	virtual LRESULT SendDuiMessage(UINT uMsg, CUIWindowBase* pSrcCtrl = NULL, WPARAM wParam = 0, LPARAM lParam = 0);
 
-	static LRESULT SendDuiMessage(CWindowBase* pWindow, UINT uMsg, const CDuiMSG& duiMSG);
+	static LRESULT SendDuiMessage(CUIWindowBase* pWindow, UINT uMsg, const CDuiMSG& duiMSG);
 
-	static LRESULT SendDuiMessage(CWindowBase* pWindow, INT uMsg, CWindowBase* pSrcCtrl = NULL, WPARAM wParam = 0, LPARAM lParam = 0);
+	static LRESULT SendDuiMessage(CUIWindowBase* pWindow, INT uMsg, CUIWindowBase* pSrcCtrl = NULL, WPARAM wParam = 0, LPARAM lParam = 0);
 
 	DECLARE_DUI_MSG_MAP(CMessageHandler);
 };

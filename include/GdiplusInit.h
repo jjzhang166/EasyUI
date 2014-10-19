@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CGdiplusInit{
+class EASYUI_API CGdiplusInit{
 public:
 	CGdiplusInit(){	
 		Gdiplus::GdiplusStartupInput startupInfo;

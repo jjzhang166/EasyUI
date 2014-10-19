@@ -1,11 +1,11 @@
 #pragma once
 
-class EASY_UI_API CWindowFactory{
+class EASYUI_API CWindowFactory{
 private:
 	CWindowFactory(){};
 
 public:
 	static CWindowFactory* GetInst();
-	static CWindowBase* GetWindow(LPCTSTR szType, CWindowBase* pParent);
-	CWindowBase* GetObject(LPCTSTR szType, CWindowBase* pParent);
+	static CUIWindowBase* GetWindow(LPCTSTR szType, CUIWindowBase* pParent);
+	CUIWindowBase* GetObject(LPCTSTR szType, CUIWindowBase* pParent);
 };

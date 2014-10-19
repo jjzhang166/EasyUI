@@ -1,19 +1,20 @@
 #pragma once
 
-class EASY_UI_API CTopHWNDWindow	: public CWindowImpl<CTopHWNDWindow>
-						, public CContainerWindowBase
+class EASYUI_API CUITopWindow	: public CWindowImpl<CUITopWindow>
+						, public CUIContainerWindowBase
 {
 public:
-	CTopHWNDWindow(void);
-	~CTopHWNDWindow(void);
+	CUITopWindow(void);
+	~CUITopWindow(void);
 
 	virtual BOOL IsDUIWindow(){return TRUE;};
 
 	DECLARE_WND_CLASS(_T("SkinUI_HWND"))
 
-	BEGIN_MSG_MAP(CTopHWNDWindow)
+	BEGIN_MSG_MAP(CUITopWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_CLOSE, OnClose)
+		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnMouseMove)
 		MESSAGE_HANDLER(WM_MOUSELEAVE, OnMouseLeave)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
@@ -27,17 +28,20 @@ public:
 		MESSAGE_HANDLER(WM_SIZE,OnSize)
 		MESSAGE_HANDLER(WM_GETMINMAXINFO,OnGetMinMaxInfo)
 		MESSAGE_HANDLER(WM_NCHITTEST,OnNcHitTest)
+		MESSAGE_HANDLER(WM_KILLFOCUS,OnKillFocus)
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
-	BEGIN_DUI_MSG_MAP(CTopHWNDWindow)
+	BEGIN_DUI_MSG_MAP(CUITopWindow)
 		DUI_MSG_HANDLER(WM_SIZE, dui_OnSize)
-		CHAIN_DUI_MSG_MAP(CContainerWindowBase)
+		CHAIN_DUI_MSG_MAP(CUIContainerWindowBase)
 	END_DUI_MESSAGE_MAP()
 
 	LRESULT dui_OnSize(const CDuiMSG& duiMsg, BOOL bHandled);
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnMouseLeave(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -51,27 +55,27 @@ public:
 	LRESULT OnSize(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnGetMinMaxInfo(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnNcHitTest(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
-	
+	LRESULT OnKillFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 
 	virtual BOOL MoveWindow(LPRECT lprc);
 	virtual BOOL MoveWindow(int nLeft, int nTop, int nWidth, int nHeight);
 	BOOL CreateHWND(HWND hWndParent, LPRECT lprc = NULL, UINT uStyle = 0, UINT uStyleEx = 0);
 
 	//¿Ø¼þ¹ÜÀí
-	CWindowBase* GetFocusWindow();
-	void SetFocusWindow(CWindowBase* pWindow);
-	CWindowBase* GetHoverWindow();
-	void SetHoverWindow(CWindowBase* pWindow);
-	CWindowBase* GetCaptureWindow();
-	void SetCaptureWindow(CWindowBase* pWindow);
+	CUIWindowBase* GetFocusWindow();
+	void SetFocusWindow(CUIWindowBase* pWindow);
+	CUIWindowBase* GetHoverWindow();
+	void SetHoverWindow(CUIWindowBase* pWindow);
+	CUIWindowBase* GetCaptureWindow();
+	void SetCaptureWindow(CUIWindowBase* pWindow);
 
 	virtual BOOL ParseAttribute(pugi::xml_node& node);
 	virtual BOOL Create(HWND hWndParent, LPCTSTR szPath);
 	
 protected:
-	CWindowBase* m_pFocusWindow;
-	CWindowBase* m_pHoverWindow;
-	CWindowBase* m_pCaptureWindow;
+	CUIWindowBase* m_pFocusWindow;
+	CUIWindowBase* m_pHoverWindow;
+	CUIWindowBase* m_pCaptureWindow;
 
 	bool			m_bTrackLeave;
 	bool			m_bSizeBox;

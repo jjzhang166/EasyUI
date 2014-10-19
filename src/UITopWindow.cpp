@@ -3,8 +3,8 @@
 using namespace pugi;
 
 
-CTopHWNDWindow::CTopHWNDWindow(void)
-	: CContainerWindowBase(NULL)
+CUITopWindow::CUITopWindow(void)
+	: CUIContainerWindowBase(NULL)
 	, m_pFocusWindow(NULL)
 	, m_pHoverWindow(NULL)
 	, m_pCaptureWindow(NULL)
@@ -15,20 +15,20 @@ CTopHWNDWindow::CTopHWNDWindow(void)
 	m_pRoot = this;
 }
 
-CTopHWNDWindow::~CTopHWNDWindow(void)
+CUITopWindow::~CUITopWindow(void)
 {
 	m_pFocusWindow = NULL;
 	m_pHoverWindow = NULL;
 }
 
-LRESULT CTopHWNDWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
+LRESULT CUITopWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
 {
 	CSize szWnd(GET_X_LPARAM(duiMsg.lParam),GET_Y_LPARAM(duiMsg.lParam));
 	m_rcWnd.SetRect(0,0,szWnd.cx,szWnd.cy);
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnCreate( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnCreate( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	xml_document document;
 	document.load_file(m_strSkinPath.c_str());
@@ -60,14 +60,22 @@ LRESULT CTopHWNDWindow::OnCreate( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPa
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnClose( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnClose( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
-	::PostQuitMessage(0);
+	SendDuiMessage(WM_CLOSE,this);
+	//DestroyWindow();
 
 	return true;
 }
 
-LRESULT CTopHWNDWindow::OnMouseMove( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled )
+LRESULT CUITopWindow::OnDestroy( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+{
+	SendDuiMessage(WM_DESTROY,this);
+	::PostQuitMessage(0);
+	return TRUE;
+}
+
+LRESULT CUITopWindow::OnMouseMove( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled )
 {
 	if(!m_bTrackLeave){
 		TRACKMOUSEEVENT tme = {sizeof(TRACKMOUSEEVENT)};
@@ -83,8 +91,8 @@ LRESULT CTopHWNDWindow::OnMouseMove( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lP
 		CPoint ptCursor;
 		GetCursorPos(&ptCursor);
 		ScreenToClient(&ptCursor);
-		CWindowBase* pNewHoverWindow = FindChild(ptCursor,eFindChild_Backward|eFindChild_Recursive);
-		CWindowBase* pOldHoverWindow = GetHoverWindow();
+		CUIWindowBase* pNewHoverWindow = FindChild(ptCursor,eFindChild_Backward|eFindChild_Recursive);
+		CUIWindowBase* pOldHoverWindow = GetHoverWindow();
 		if(pNewHoverWindow != pOldHoverWindow){
 			SetHoverWindow(pNewHoverWindow);
 			if(pOldHoverWindow)
@@ -100,16 +108,16 @@ LRESULT CTopHWNDWindow::OnMouseMove( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lP
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnMouseLeave( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnMouseLeave( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	if(m_bTrackLeave){
 		m_bTrackLeave = false;
 	}
 
 	//if top window
-	CTopHWNDWindow* pTopWindow = dynamic_cast<CTopHWNDWindow*>(this);
+	CUITopWindow* pTopWindow = dynamic_cast<CUITopWindow*>(this);
 	ATLASSERT(pTopWindow);
-	CWindowBase* pOldHoverWindow = pTopWindow->GetHoverWindow();
+	CUIWindowBase* pOldHoverWindow = pTopWindow->GetHoverWindow();
 	if(pOldHoverWindow){
 		pTopWindow->SetHoverWindow(NULL);
 		pOldHoverWindow->SendDuiMessage(WM_MOUSELEAVE);
@@ -118,7 +126,7 @@ LRESULT CTopHWNDWindow::OnMouseLeave( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
+LRESULT CUITopWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
 {
 	bHandled = FALSE;
 
@@ -126,8 +134,8 @@ LRESULT CTopHWNDWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM 
 		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDOWN);
 	}
 	else{
-		CWindowBase* pNewFocusWindow = GetHoverWindow();
-		CWindowBase* pOldFocusWindow = GetFocusWindow();
+		CUIWindowBase* pNewFocusWindow = GetHoverWindow();
+		CUIWindowBase* pOldFocusWindow = GetFocusWindow();
 
 		if(pNewFocusWindow != pOldFocusWindow){
 			SetFocusWindow(pNewFocusWindow);
@@ -139,18 +147,17 @@ LRESULT CTopHWNDWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM 
 
 		if(pNewFocusWindow)pNewFocusWindow->SendDuiMessage(WM_LBUTTONDOWN);
 	}
-	
 
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnLButtonUp( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnLButtonUp( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	if(GetCaptureWindow()){
 		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONUP,this);
 	}
 	else{
-		CWindowBase* pFocusWindow = GetFocusWindow();
+		CUIWindowBase* pFocusWindow = GetFocusWindow();
 		if(pFocusWindow){
 			pFocusWindow->SendDuiMessage(WM_LBUTTONUP);
 		}
@@ -159,7 +166,7 @@ LRESULT CTopHWNDWindow::OnLButtonUp( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
+LRESULT CUITopWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
 {
 	bHandled = FALSE;
 
@@ -167,8 +174,8 @@ LRESULT CTopHWNDWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDBLCLK);
 	}
 	else{
-		CWindowBase* pNewFocusWindow = GetHoverWindow();
-		CWindowBase* pOldFocusWindow = GetFocusWindow();
+		CUIWindowBase* pNewFocusWindow = GetHoverWindow();
+		CUIWindowBase* pOldFocusWindow = GetFocusWindow();
 
 		if(pNewFocusWindow != pOldFocusWindow){
 			SetFocusWindow(pNewFocusWindow);
@@ -184,12 +191,12 @@ LRESULT CTopHWNDWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnEraseBkgnd( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnEraseBkgnd( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnPaint( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnPaint( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	CPaintDC paintDC(*this);
 	CRect rcWnd;
@@ -209,28 +216,28 @@ LRESULT CTopHWNDWindow::OnPaint( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPar
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnNcCalcSize( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnNcCalcSize( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnNcActive( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnNcActive( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnNcPaint( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnNcPaint( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnSize( UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnSize( UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/ )
 {
 	SendDuiMessage(WM_SIZE,this,wParam,lParam);
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnGetMinMaxInfo( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnGetMinMaxInfo( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/ )
 {
 	LPMINMAXINFO pInfo = (LPMINMAXINFO)lParam;
 	if(pInfo){
@@ -256,7 +263,7 @@ LRESULT CTopHWNDWindow::OnGetMinMaxInfo( UINT /*uMsg*/, WPARAM /*wParam*/, LPARA
 	return TRUE;
 }
 
-LRESULT CTopHWNDWindow::OnNcHitTest( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnNcHitTest( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	if(m_nCaption == -1){
 		return HTCAPTION;
@@ -309,7 +316,7 @@ LRESULT CTopHWNDWindow::OnNcHitTest( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*
 	if(HTCAPTION == lRtn){
 		CPoint pt(ptCursor);
 		ScreenToClient(&pt);
-		CWindowBase* pCtrl = FindChild(pt,eFindChild_Backward|eFindChild_Recursive);
+		CUIWindowBase* pCtrl = FindChild(pt,eFindChild_Backward|eFindChild_Recursive);
 		if(pCtrl && pCtrl->IsOverCaption()){
 			lRtn = HTCLIENT;
 		}
@@ -318,57 +325,64 @@ LRESULT CTopHWNDWindow::OnNcHitTest( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*
 	return lRtn;
 }
 
-BOOL CTopHWNDWindow::MoveWindow( LPRECT lprc )
+LRESULT CUITopWindow::OnKillFocus( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
 {
-	CContainerWindowBase::MoveWindow(lprc);
-	CWindowImpl<CTopHWNDWindow>::MoveWindow(lprc);
+	bHandled = FALSE;
 
 	return TRUE;
 }
 
-BOOL CTopHWNDWindow::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
+BOOL CUITopWindow::MoveWindow( LPRECT lprc )
 {
-	CContainerWindowBase::MoveWindow(nLeft,nTop,nWidth,nHeight);
-	CWindowImpl<CTopHWNDWindow>::MoveWindow(nLeft,nTop,nWidth,nHeight);
+	CUIContainerWindowBase::MoveWindow(lprc);
+	CWindowImpl<CUITopWindow>::MoveWindow(lprc);
 
 	return TRUE;
 }
 
-BOOL CTopHWNDWindow::CreateHWND( HWND hWndParent, LPRECT lprc /* = NULL*/, UINT uStyle/* = 0*/, UINT uStyleEx/* = 0*/)
+BOOL CUITopWindow::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
 {
-	CWindowImpl<CTopHWNDWindow>::Create(hWndParent,lprc, NULL, uStyle, uStyleEx);
+	CUIContainerWindowBase::MoveWindow(nLeft,nTop,nWidth,nHeight);
+	CWindowImpl<CUITopWindow>::MoveWindow(nLeft,nTop,nWidth,nHeight);
+
 	return TRUE;
 }
 
-CWindowBase* CTopHWNDWindow::GetFocusWindow()
+BOOL CUITopWindow::CreateHWND( HWND hWndParent, LPRECT lprc /* = NULL*/, UINT uStyle/* = 0*/, UINT uStyleEx/* = 0*/)
+{
+	CWindowImpl<CUITopWindow>::Create(hWndParent,lprc, NULL, uStyle, uStyleEx);
+	return TRUE;
+}
+
+CUIWindowBase* CUITopWindow::GetFocusWindow()
 {
 	return m_pFocusWindow;
 }
 
-void CTopHWNDWindow::SetFocusWindow( CWindowBase* pWindow )
+void CUITopWindow::SetFocusWindow( CUIWindowBase* pWindow )
 {
 	m_pFocusWindow = pWindow;
 }
 
-CWindowBase* CTopHWNDWindow::GetHoverWindow()
+CUIWindowBase* CUITopWindow::GetHoverWindow()
 {
 	return m_pHoverWindow;
 }
 
-void CTopHWNDWindow::SetHoverWindow( CWindowBase* pWindow )
+void CUITopWindow::SetHoverWindow( CUIWindowBase* pWindow )
 {
 	m_pHoverWindow = pWindow;
 }
 
-CWindowBase* CTopHWNDWindow::GetCaptureWindow()
+CUIWindowBase* CUITopWindow::GetCaptureWindow()
 {
 	return m_pCaptureWindow;
 }
 
-void CTopHWNDWindow::SetCaptureWindow( CWindowBase* pWindow )
+void CUITopWindow::SetCaptureWindow( CUIWindowBase* pWindow )
 {
+	CUIWindowBase* pOldCaptureWnd = m_pCaptureWindow;
 	m_pCaptureWindow = pWindow;
-
 	if(pWindow!=NULL){
 		::SetCapture(m_hWnd);
 	}
@@ -377,7 +391,7 @@ void CTopHWNDWindow::SetCaptureWindow( CWindowBase* pWindow )
 	}
 }
 
-BOOL CTopHWNDWindow::ParseAttribute( pugi::xml_node& node )
+BOOL CUITopWindow::ParseAttribute( pugi::xml_node& node )
 {
 	__super::ParseAttribute(node);
 
@@ -400,7 +414,7 @@ BOOL CTopHWNDWindow::ParseAttribute( pugi::xml_node& node )
 	return TRUE;
 }
 
-BOOL CTopHWNDWindow::Create(HWND hWndParent, LPCTSTR szPath )
+BOOL CUITopWindow::Create(HWND hWndParent, LPCTSTR szPath )
 {
 	m_strSkinPath = szPath;
 	CreateHWND(hWndParent,CRect(0,0,0,0),WS_CLIPCHILDREN|WS_CLIPSIBLINGS|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SIZEBOX);

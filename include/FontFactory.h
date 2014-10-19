@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CFontFactory
+class EASYUI_API CFontFactory
 {
 protected:
 	struct FontID;

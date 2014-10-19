@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CImageFactory
+class EASYUI_API CImageFactory
 {
 private:
 	CImageFactory(void){};

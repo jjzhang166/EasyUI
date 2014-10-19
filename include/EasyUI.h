@@ -25,18 +25,18 @@
 
 //////////////////////////////////////////////////////////////////////////
 #ifdef	EASY_UI_STATIC_LIBRARY
-#define EASY_UI_API
+#define EASYUI_API
 #else	//EASY_UI_STATIC_LIBRARY
 #ifdef EASY_UI_EXPORT
-#define EASY_UI_API __declspec(dllexport)
+#define EASYUI_API __declspec(dllexport)
 #else
-#define EASY_UI_API __declspec(dllimport)
+#define EASYUI_API __declspec(dllimport)
 #endif
 #endif	//EASY_UI_STATIC_LIBRARY
 
 
 //pre declear 
-class EASY_UI_API CWindowBase;
+class EASYUI_API CUIWindowBase;
 
 //depends header
 #include "../src/pugixml/pugixml.hpp"
@@ -47,8 +47,8 @@ class EASY_UI_API CWindowBase;
 #include <ParserHelper.h>
 #include <MessageHandler.h>
 #include <SmartDC.h>
-#include <WindowBase.h>
-#include <ContainerWindowBase.h>
+#include <UIWindowBase.h>
+#include <UIContainerWindowBase.h>
 #include <EasyUIApp.h>
 
 #include <BrushFactory.h>
@@ -57,9 +57,10 @@ class EASY_UI_API CWindowBase;
 #include <ImageFactory.h>
 
 #include <WindowFactory.h>
-#include <TopHWNDWindow.h>
-#include <HoriLayout.h>
-#include <VertLayout.h>
-#include <DuiLabel.h>
-#include <DuiButton.h>
+#include <UITopWindow.h>
+#include <UIHoriLayout.h>
+#include <UIVertLayout.h>
+#include <UILabel.h>
+#include <UIButton.h>
+#include <UIEdit.h>
 

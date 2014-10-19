@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CBrushFactory{
+class EASYUI_API CBrushFactory{
 private:
 	CBrushFactory(){}
 public:

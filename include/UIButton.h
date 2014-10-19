@@ -1,8 +1,8 @@
 #pragma once
 
-class EASY_UI_API CDuiButton : public CWindowBase{
+class EASYUI_API CUIButton : public CUIWindowBase{
 public:
-	CDuiButton(CWindowBase* pParent);		
+	CUIButton(CUIWindowBase* pParent);		
 
 	BEGIN_DUI_MSG_MAP(CButton)
 		DUI_MSG_HANDLER(WM_MOUSEENTER,dui_OnMouseEnter)

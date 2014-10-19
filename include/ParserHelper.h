@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API ParserHelper{
+class EASYUI_API ParserHelper{
 private:
 	ParserHelper();//no impl
 

@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CEasyUIApp{
+class EASYUI_API CEasyUIApp{
 protected:
 	CEasyUIApp();
 	~CEasyUIApp();
@@ -17,7 +17,7 @@ public:
 
 private:
 	HMODULE m_hResourceModule;
-	CGdiplusInit m_gpInit;
+	CGdiplusInit m_gidplusInit;
 };
 
 

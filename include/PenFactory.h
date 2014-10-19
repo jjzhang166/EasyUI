@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CPenFactory
+class EASYUI_API CPenFactory
 {
 protected:
 	struct PenID;

@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
-CContainerWindowBase::CContainerWindowBase(CWindowBase* pParent)
-	: CWindowBase(pParent)
+CUIContainerWindowBase::CUIContainerWindowBase(CUIWindowBase* pParent)
+	: CUIWindowBase(pParent)
 {
 }
 
 
-CContainerWindowBase::~CContainerWindowBase(void)
+CUIContainerWindowBase::~CUIContainerWindowBase(void)
 {
 }
 
-LRESULT CContainerWindowBase::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
+LRESULT CUIContainerWindowBase::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
 {
 	for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
 		CRect rcWnd;
@@ -21,9 +21,9 @@ LRESULT CContainerWindowBase::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
 	return TRUE;
 }
 
-CWindowBase* CContainerWindowBase::ForwardFindChild(const std::function<bool(CWindowBase*)>& pred )
+CUIWindowBase* CUIContainerWindowBase::ForwardFindChild(const std::function<bool(CUIWindowBase*)>& pred )
 {
-	CWindowBase* pWindow = NULL;
+	CUIWindowBase* pWindow = NULL;
 	IterChildWndList iter = std::find_if(m_childWndList.begin(),m_childWndList.end(),pred);
 	if(iter!=m_childWndList.end()){
 		pWindow = (*iter);
@@ -32,9 +32,9 @@ CWindowBase* CContainerWindowBase::ForwardFindChild(const std::function<bool(CWi
 	return pWindow;
 }
 
-CWindowBase* CContainerWindowBase::BackwardFindChild(const std::function<bool(CWindowBase*)>& pred )
+CUIWindowBase* CUIContainerWindowBase::BackwardFindChild(const std::function<bool(CUIWindowBase*)>& pred )
 {
-	CWindowBase* pWindow = NULL;
+	CUIWindowBase* pWindow = NULL;
 	TypeChildWndList::reverse_iterator iter = std::find_if(m_childWndList.rbegin(),m_childWndList.rend(),pred);
 	if(iter!=m_childWndList.rend()){
 		pWindow = (*iter);
@@ -43,18 +43,18 @@ CWindowBase* CContainerWindowBase::BackwardFindChild(const std::function<bool(CW
 	return pWindow;
 }
 
-CWindowBase* CContainerWindowBase::FindChild( LPCTSTR szName,int nFindFlag )
+CUIWindowBase* CUIContainerWindowBase::FindChild( LPCTSTR szName,int nFindFlag )
 {
-	std::function<bool(CWindowBase*)> pred = [szName](CWindowBase* pWindow)->bool{return pWindow->GetName()==szName;};
+	std::function<bool(CUIWindowBase*)> pred = [szName](CUIWindowBase* pWindow)->bool{return pWindow->GetName()==szName;};
 	if(!(nFindFlag&eFindChild_Backward)){
 		if(!(nFindFlag&eFindChild_Recursive)){
 			return ForwardFindChild(pred);
 		}
 		else{
-			CWindowBase* pWindow = this;
-			CWindowBase* pFindRes = NULL;
+			CUIWindowBase* pWindow = this;
+			CUIWindowBase* pFindRes = NULL;
 			while(pWindow->IsContainer() && 
-				(pFindRes = dynamic_cast<CContainerWindowBase*>(pWindow)->ForwardFindChild(pred))
+				(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->ForwardFindChild(pred))
 				)
 			{
 				pWindow = pFindRes;
@@ -73,10 +73,10 @@ CWindowBase* CContainerWindowBase::FindChild( LPCTSTR szName,int nFindFlag )
 		}
 		else
 		{
-			CWindowBase* pWindow = this;
-			CWindowBase* pFindRes = NULL;
+			CUIWindowBase* pWindow = this;
+			CUIWindowBase* pFindRes = NULL;
 			while(pWindow->IsContainer() && 
-					(pFindRes = dynamic_cast<CContainerWindowBase*>(pWindow)->BackwardFindChild(pred))
+					(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->BackwardFindChild(pred))
 				)
 			{
 				pWindow = pFindRes;
@@ -91,20 +91,20 @@ CWindowBase* CContainerWindowBase::FindChild( LPCTSTR szName,int nFindFlag )
 	}
 }
 
-CWindowBase* CContainerWindowBase::FindChild( const CPoint& pt,int nFindFlag )
+CUIWindowBase* CUIContainerWindowBase::FindChild( const CPoint& pt,int nFindFlag )
 {
-	std::function<bool(CWindowBase*)> pred = 
-		[&pt](CWindowBase* pWindow)->bool{CRect rcCtrl;pWindow->GetRect(rcCtrl);return (rcCtrl.PtInRect(pt)==TRUE);};
+	std::function<bool(CUIWindowBase*)> pred = 
+		[&pt](CUIWindowBase* pWindow)->bool{CRect rcCtrl;pWindow->GetRect(rcCtrl);return (rcCtrl.PtInRect(pt)==TRUE);};
 
 	if(!(nFindFlag&eFindChild_Backward)){
 		if(!(nFindFlag&eFindChild_Recursive)){
 			return ForwardFindChild(pred);
 		}
 		else{
-			CWindowBase* pWindow = this;
-			CWindowBase* pFindRes = NULL;
+			CUIWindowBase* pWindow = this;
+			CUIWindowBase* pFindRes = NULL;
 			while(pWindow->IsContainer() && 
-				(pFindRes = dynamic_cast<CContainerWindowBase*>(pWindow)->ForwardFindChild(pred))
+				(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->ForwardFindChild(pred))
 				)
 			{
 				pWindow = pFindRes;
@@ -123,10 +123,10 @@ CWindowBase* CContainerWindowBase::FindChild( const CPoint& pt,int nFindFlag )
 		}
 		else
 		{
-			CWindowBase* pWindow = this;
-			CWindowBase* pFindRes = NULL;
+			CUIWindowBase* pWindow = this;
+			CUIWindowBase* pFindRes = NULL;
 			while(pWindow->IsContainer() && 
-				(pFindRes = dynamic_cast<CContainerWindowBase*>(pWindow)->BackwardFindChild(pred))
+				(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->BackwardFindChild(pred))
 				)
 			{
 				pWindow = pFindRes;
@@ -141,7 +141,7 @@ CWindowBase* CContainerWindowBase::FindChild( const CPoint& pt,int nFindFlag )
 	}
 }
 
-BOOL CContainerWindowBase::ParseAttribute( pugi::xml_node& node )
+BOOL CUIContainerWindowBase::ParseAttribute( pugi::xml_node& node )
 {
 	__super::ParseAttribute(node);
 
@@ -153,19 +153,19 @@ BOOL CContainerWindowBase::ParseAttribute( pugi::xml_node& node )
 	return TRUE;
 }
 
-BOOL CContainerWindowBase::Create( pugi::xml_node& node )
+BOOL CUIContainerWindowBase::Create( pugi::xml_node& node )
 {
 	__super::Create(node);
 
 	return CreateChilds(node);
 }
 
-BOOL CContainerWindowBase::CreateChilds( pugi::xml_node& node )
+BOOL CUIContainerWindowBase::CreateChilds( pugi::xml_node& node )
 {
 	pugi::xml_node childNode = node.first_child();
 	while (childNode)
 	{
-		CWindowBase* pWindow = CWindowFactory::GetWindow(childNode.name(), this);
+		CUIWindowBase* pWindow = CWindowFactory::GetWindow(childNode.name(), this);
 		pWindow->Create(childNode);
 		m_childWndList.push_back(pWindow);
 		SendDuiMessage(pWindow,WM_CREATE,this);
@@ -174,20 +174,20 @@ BOOL CContainerWindowBase::CreateChilds( pugi::xml_node& node )
 	return TRUE;
 }
 
-void CContainerWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
+void CUIContainerWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
 {
 	__super::DoPaint(pGraphics);
 	DoPaintChilds(pGraphics);
 }
 
-void CContainerWindowBase::DoPaintChilds( Gdiplus::Graphics* pGraphics )
+void CUIContainerWindowBase::DoPaintChilds( Gdiplus::Graphics* pGraphics )
 {
 	Gdiplus::RectF rcCtrlClip;
 	pGraphics->GetClipBounds(&rcCtrlClip);
 	for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
 		CRect rcCtrl;
 		(*iter)->GetRect(rcCtrl);
-		pGraphics->IntersectClip(GdiplusHelper::EasyRectF(rcCtrl));
+		pGraphics->IntersectClip(GdiplusHelper::Rect2GPRectF(rcCtrl));
 
 		(*iter)->DoPaint(pGraphics);
 

@@ -1,21 +1,21 @@
 #include "StdAfx.h"
 
-CVertLayout::CVertLayout(CWindowBase* pParent)
-	: CContainerWindowBase(pParent)
+CUIHoriLayout::CUIHoriLayout(CUIWindowBase* pParent)
+	: CUIContainerWindowBase(pParent)
 {
 }
 
 
-CVertLayout::~CVertLayout(void)
+CUIHoriLayout::~CUIHoriLayout(void)
 {
 }
 
-LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
+LRESULT CUIHoriLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 {
 	bHandled = TRUE;
 
 	if(m_childWndList.empty()){
-		return TRUE;
+		return true;
 	}
 
 	if(!IsVisible()){
@@ -23,13 +23,12 @@ LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 	}
 
 	int nAdjustItemCount = 0;
-	int nMinHeightCount = m_rcPadding.top + m_rcPadding.bottom;
+	int nMinWidthCount = m_rcPadding.left + m_rcPadding.right;
 	for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
-		CWindowBase* pCtrl = (*iter);
+		CUIWindowBase* pCtrl = (*iter);
 		if(pCtrl->IsFloat()){
 			continue;
 		}
-
 		if(!pCtrl->IsVisible()){
 			continue;
 		}
@@ -38,24 +37,33 @@ LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 		CSize minSize;
 		pCtrl->GetInitRect(rcInit);
 		pCtrl->GetMinSize(minSize);
-		if(rcInit.Height() == 0){
-			nMinHeightCount += minSize.cy;
+		if(rcInit.Width() == 0){
+			nMinWidthCount += minSize.cx;
 			nAdjustItemCount++;
 		}
 		else{
-			nMinHeightCount += rcInit.Height();
+			nMinWidthCount += rcInit.Width();
 		}
 	}
 
-	const int nAdjustHeightPerCtrl = (nAdjustItemCount==0) ? 0:(max(m_rcWnd.Height()-nMinHeightCount,0)/nAdjustItemCount);
-	int nTop = m_rcWnd.top + m_rcPadding.top;
+	const int nAdjustWidthPerCtrl = (nAdjustItemCount==0) ? 0:(max(m_rcWnd.Width()-nMinWidthCount,0)/nAdjustItemCount);
+	int nLeft = m_rcWnd.left+m_rcPadding.left;
+
+	if(nAdjustItemCount==0 && m_rcWnd.Width()-nMinWidthCount>0){
+		if(m_strChildAlign == _T("center")){
+			nLeft += (m_rcWnd.Width()-nMinWidthCount)/2;
+		}
+		else if(m_strChildAlign == _T("right")){
+			nLeft += (m_rcWnd.Width()-nMinWidthCount);
+		}
+	}
 
 	for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
-		CWindowBase* pCtrl = (*iter);
+		CUIWindowBase* pCtrl = (*iter);
 		if(pCtrl->IsFloat()){
 			CRect rcResult;
 			pCtrl->CalcWindowFloatPos(rcResult);
-			pCtrl->MoveWindow(rcResult);
+			pCtrl->MoveWindow(&rcResult);
 			continue;
 		}
 
@@ -78,7 +86,7 @@ LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 		//width
 		{
 			if(rcInit.Width() == 0){
-				nCtrlWidth = m_rcWnd.Width()-m_rcPadding.left-m_rcPadding.right-rcMargin.left-rcMargin.right;
+				nCtrlWidth = minSize.cx + nAdjustWidthPerCtrl;
 			}
 			else{
 				nCtrlWidth = rcInit.Width();
@@ -92,7 +100,7 @@ LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 		//height
 		{
 			if(rcInit.Height() == 0){
-				nCtrlHeight = minSize.cy + nAdjustHeightPerCtrl;
+				nCtrlHeight = m_rcWnd.Height()-m_rcPadding.top-m_rcPadding.bottom-rcMargin.top - rcMargin.bottom;
 			}
 			else{
 				nCtrlHeight = rcInit.Height();
@@ -104,14 +112,15 @@ LRESULT CVertLayout::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 				nCtrlHeight = maxSize.cy;
 		}
 
-		nTop += rcMargin.top;
-		rcResult.left = m_rcWnd.left + m_rcPadding.left + rcMargin.left;
-		rcResult.top = nTop;
+		nLeft += rcMargin.left;
+		rcResult.left = nLeft;
+		rcResult.top = m_rcWnd.top + m_rcPadding.top + rcMargin.top;
 		rcResult.right = rcResult.left + nCtrlWidth;
 		rcResult.bottom = rcResult.top + nCtrlHeight;
 
 		pCtrl->MoveWindow(rcResult);
-		nTop = rcResult.bottom + rcMargin.bottom;
+		nLeft = rcResult.right + rcMargin.right;
 	}
+
 	return TRUE;
 }

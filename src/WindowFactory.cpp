@@ -10,25 +10,28 @@ CWindowFactory* CWindowFactory::GetInst()
 	return pInst;
 }
 
-CWindowBase* CWindowFactory::GetWindow( LPCTSTR szType, CWindowBase* pParent )
+CUIWindowBase* CWindowFactory::GetWindow( LPCTSTR szType, CUIWindowBase* pParent )
 {
 	return GetInst()->GetObject(szType, pParent);
 }
 
-CWindowBase* CWindowFactory::GetObject( LPCTSTR szType, CWindowBase* pParent)
+CUIWindowBase* CWindowFactory::GetObject( LPCTSTR szType, CUIWindowBase* pParent)
 {
-	CWindowBase* pWindow = NULL;
-	if(_tcsicmp(szType,_T("label")) == 0){
-		pWindow = new CDuiLabel(pParent);
+	CUIWindowBase* pWindow = NULL;
+	if(_tcsicmp(szType, _T("label")) == 0){
+		pWindow = new CUILabel(pParent);
 	}
-	else if(_tcsicmp(szType,_T("button")) == 0){
-		pWindow = new CDuiButton(pParent);
+	else if(_tcsicmp(szType, _T("button")) == 0){
+		pWindow = new CUIButton(pParent);
 	}
-	else if(_tcsicmp(szType,_T("hori_layout")) == 0){
-		pWindow = new CHoriLayout(pParent);
+	else if(_tcsicmp(szType, _T("hori_layout")) == 0){
+		pWindow = new CUIHoriLayout(pParent);
 	}
-	else if(_tcsicmp(szType,_T("vert_layout")) == 0){
-		pWindow = new CVertLayout(pParent);
+	else if(_tcsicmp(szType, _T("vert_layout")) == 0){
+		pWindow = new CUIVertLayout(pParent);
+	}
+	else if(_tcsicmp(szType, _T("edit")) == 0){
+		pWindow = new CUIEdit(pParent);
 	}
 	ATLASSERT(pWindow);
 

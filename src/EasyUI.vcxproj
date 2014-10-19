@@ -77,23 +77,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BrushFactory.h" />
-    <ClInclude Include="..\include\ContainerWindowBase.h" />
-    <ClInclude Include="..\include\DuiButton.h" />
-    <ClInclude Include="..\include\DuiLabel.h" />
+    <ClInclude Include="..\include\UIContainerWindowBase.h" />
+    <ClInclude Include="..\include\UIButton.h" />
+    <ClInclude Include="..\include\UIEdit.h" />
+    <ClInclude Include="..\include\UILabel.h" />
     <ClInclude Include="..\include\EasyUI.h" />
     <ClInclude Include="..\include\EasyUIApp.h" />
     <ClInclude Include="..\include\FontFactory.h" />
     <ClInclude Include="..\include\GdiplusHelper.h" />
     <ClInclude Include="..\include\GdiplusInit.h" />
-    <ClInclude Include="..\include\HoriLayout.h" />
+    <ClInclude Include="..\include\UIHoriLayout.h" />
     <ClInclude Include="..\include\ImageFactory.h" />
     <ClInclude Include="..\include\MessageHandler.h" />
     <ClInclude Include="..\include\ParserHelper.h" />
     <ClInclude Include="..\include\PenFactory.h" />
     <ClInclude Include="..\include\SmartDC.h" />
-    <ClInclude Include="..\include\TopHWNDWindow.h" />
-    <ClInclude Include="..\include\VertLayout.h" />
-    <ClInclude Include="..\include\WindowBase.h" />
+    <ClInclude Include="..\include\UITopWindow.h" />
+    <ClInclude Include="..\include\UIVertLayout.h" />
+    <ClInclude Include="..\include\UIWindowBase.h" />
     <ClInclude Include="..\include\WindowFactory.h" />
     <ClInclude Include="pugixml\pugiconfig.hpp" />
     <ClInclude Include="pugixml\pugixml.hpp" />
@@ -102,13 +103,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrushFactory.cpp" />
-    <ClCompile Include="ContainerWindowBase.cpp" />
-    <ClCompile Include="DuiButton.cpp" />
-    <ClCompile Include="DuiLabel.cpp" />
+    <ClCompile Include="UIContainerWindowBase.cpp" />
+    <ClCompile Include="UIButton.cpp" />
+    <ClCompile Include="UIEdit.cpp" />
+    <ClCompile Include="UILabel.cpp" />
     <ClCompile Include="EasyUIApp.cpp" />
     <ClCompile Include="FontFactory.cpp" />
     <ClCompile Include="GdiplusHelper.cpp" />
-    <ClCompile Include="HoriLayout.cpp" />
+    <ClCompile Include="UIHoriLayout.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="ParserHelper.cpp" />
@@ -120,9 +122,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TopHWNDWindow.cpp" />
-    <ClCompile Include="VertLayout.cpp" />
-    <ClCompile Include="WindowBase.cpp" />
+    <ClCompile Include="UITopWindow.cpp" />
+    <ClCompile Include="UIVertLayout.cpp" />
+    <ClCompile Include="UIWindowBase.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,6 +1,6 @@
 #pragma once
 
-class EASY_UI_API CSmartDC{
+class EASYUI_API CSmartDC{
 public:
 	CSmartDC(HDC hDC, const LPRECT lprc){
 		Init();

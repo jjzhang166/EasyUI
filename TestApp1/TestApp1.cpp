@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+#include "MainWnd.h"
+
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR    lpCmdLine,
@@ -14,10 +16,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	CEasyUIApp* easyApp = CEasyUIApp::GetInst();
 	easyApp->InitApp();
 
-	CTopHWNDWindow topWnd;
-	topWnd.Create(NULL,_T("D:\\Project\\EasyUI\\TestApp1\\test.xml"));
-	topWnd.ShowWindow(SW_SHOW);
-	topWnd.UpdateWindow();
+	CMainWnd mainWnd;
+	mainWnd.Create(NULL,_T("D:\\Project\\EasyUI\\TestApp1\\test.xml"));
+	mainWnd.ShowWindow(SW_SHOW);
+	mainWnd.UpdateWindow();
 
 	return easyApp->Run();
 }
