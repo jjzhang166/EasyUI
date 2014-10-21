@@ -10,7 +10,7 @@ public:
 	virtual BOOL IsDUIWindow(){return TRUE;};
 
 	BEGIN_DUI_MSG_MAP(CUIWindowBase)
-	END_DUI_MESSAGE_MAP()
+	END_DUI_MSG_MAP()
 
 	std::wstring GetName();
 	void SetName(LPCTSTR szName);

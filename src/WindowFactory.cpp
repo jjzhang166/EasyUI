@@ -33,6 +33,10 @@ CUIWindowBase* CWindowFactory::GetObject( LPCTSTR szType, CUIWindowBase* pParent
 	else if(_tcsicmp(szType, _T("edit")) == 0){
 		pWindow = new CUIEdit(pParent);
 	}
+	else if(_tcsicmp(szType, _T("web_browser")) == 0){
+		pWindow = new CUIWebBrowser(pParent);
+	}
+
 	ATLASSERT(pWindow);
 
 	return pWindow;

@@ -10,7 +10,7 @@ public:
 		DUI_MSG_HANDLER(WM_LBUTTONDOWN,dui_OnLButtonDown)
 		DUI_MSG_HANDLER(WM_LBUTTONDBLCLK,dui_OnLButtonDown)
 		DUI_MSG_HANDLER(WM_LBUTTONUP,dui_OnLButtonUp)
-	END_DUI_MESSAGE_MAP()
+	END_DUI_MSG_MAP()
 
 	virtual BOOL ParseAttribute( pugi::xml_node& node );
 

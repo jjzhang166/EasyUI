@@ -8,7 +8,7 @@ public:
 	BEGIN_DUI_MSG_MAP(CMainWnd)
 		DUI_BMCLICK_HANDLER(_T("sys_btn_close"),dui_OnBtnClose)
 		CHAIN_DUI_MSG_MAP(CUITopWindow)
-	END_DUI_MESSAGE_MAP()
+	END_DUI_MSG_MAP()
 
 	LRESULT dui_OnBtnClose(const CDuiMSG& duiMSG, BOOL& bHandled){
 		DestroyWindow();

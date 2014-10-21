@@ -13,7 +13,7 @@ public:
 		m_pUIEdit->GetRect(rcWnd);
 
 		if(!m_hWnd){
-			Create(m_pUIEdit->GetRootHandle(),rcWnd,NULL,
+			Create(m_pUIEdit->GetRootHandle(),rcWnd,m_pUIEdit->GetText().c_str(),
 					WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
 					( m_pUIEdit->IsMultiLine()?ES_MULTILINE:0 ) | 
 					( m_pUIEdit->IsPasswordMode()?ES_PASSWORD:0 )

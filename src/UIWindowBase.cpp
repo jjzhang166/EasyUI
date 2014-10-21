@@ -565,10 +565,10 @@ void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics )
 {
 	if(!m_strBkImg.empty()){
 		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str());
-		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRect(m_rcWnd),0,0,pImage->GetWidth(),pImage->GetHeight(),UnitPixel);
+		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(m_rcWnd),0,0,pImage->GetWidth(),pImage->GetHeight(),UnitPixel);
 	}
 	else{
-		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRect(m_rcWnd));
+		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRectF(m_rcWnd));
 	}
 }
 
@@ -577,7 +577,7 @@ void CUIWindowBase::PaintBorder( Gdiplus::Graphics* pGraphics )
 	if(m_nBorderWidth){
 		Pen* pPen = CPenFactory::GetPen(m_borderColor,m_nBorderWidth);
 		pPen->SetAlignment(PenAlignmentInset);
-		pGraphics->DrawRectangle(pPen,GdiplusHelper::Rect2GPRect(m_rcWnd));
+		pGraphics->DrawRectangle(pPen,GdiplusHelper::Rect2GPRectF(m_rcWnd));
 		pPen->SetAlignment(PenAlignmentCenter);
 	}
 }

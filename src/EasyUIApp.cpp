@@ -5,12 +5,12 @@
 CEasyUIApp::CEasyUIApp()
 	: m_hResourceModule(NULL)
 {
-
+	::OleInitialize(NULL);
 }
 
 CEasyUIApp::~CEasyUIApp()
 {
-
+	::OleUninitialize();
 }
 
 CEasyUIApp* CEasyUIApp::GetInst()

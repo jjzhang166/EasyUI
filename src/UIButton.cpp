@@ -88,8 +88,7 @@ void CUIButton::PaintBkGnd( Gdiplus::Graphics* pGraphics)
 	const int nCXImg = pImage->GetWidth()/3;
 	const int nCYImg = pImage->GetHeight();
 	
-	//pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(Color::Green),EasyRect(m_rcWnd));
-	pGraphics->DrawImage(pImage, GdiplusHelper::Rect2GPRect(m_rcWnd), nCXImg*nState,0,nCXImg,nCYImg,UnitPixel);
+	pGraphics->DrawImage(pImage, GdiplusHelper::Rect2GPRectF(m_rcWnd), nCXImg*nState,0,nCXImg,nCYImg,UnitPixel);
 
 }
 

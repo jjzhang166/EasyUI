@@ -23,3 +23,4 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	return easyApp->Run();
 }
+

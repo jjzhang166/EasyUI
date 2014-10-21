@@ -63,4 +63,5 @@ class EASYUI_API CUIWindowBase;
 #include <UILabel.h>
 #include <UIButton.h>
 #include <UIEdit.h>
+#include <UIWebBrowser.h>
 

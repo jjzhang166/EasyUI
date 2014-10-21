@@ -57,6 +57,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>comsupp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,6 +95,7 @@
     <ClInclude Include="..\include\SmartDC.h" />
     <ClInclude Include="..\include\UITopWindow.h" />
     <ClInclude Include="..\include\UIVertLayout.h" />
+    <ClInclude Include="..\include\UIWebBrowser.h" />
     <ClInclude Include="..\include\UIWindowBase.h" />
     <ClInclude Include="..\include\WindowFactory.h" />
     <ClInclude Include="pugixml\pugiconfig.hpp" />
@@ -124,8 +126,12 @@
     </ClCompile>
     <ClCompile Include="UITopWindow.cpp" />
     <ClCompile Include="UIVertLayout.cpp" />
+    <ClCompile Include="UIWebBrowser.cpp" />
     <ClCompile Include="UIWindowBase.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InternalWebBrowser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

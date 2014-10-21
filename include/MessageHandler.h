@@ -33,7 +33,7 @@
 					return TRUE; \
 			}
 
-#define END_DUI_MESSAGE_MAP()\
+#define END_DUI_MSG_MAP()\
 			return FALSE;\
 		}
 

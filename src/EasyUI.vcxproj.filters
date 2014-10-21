@@ -93,6 +93,9 @@
     <ClInclude Include="..\include\UIEdit.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\UIWebBrowser.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -152,5 +155,13 @@
     <ClCompile Include="UIEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UIWebBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="InternalWebBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
