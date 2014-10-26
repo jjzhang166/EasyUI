@@ -30,61 +30,6 @@ CUIWindowBase::~CUIWindowBase(void)
 	m_pParent = NULL;
 }
 
-std::wstring CUIWindowBase::GetName()
-{
-	return m_strName;
-}
-
-void CUIWindowBase::SetName( LPCTSTR szName )
-{
-	m_strName = szName;
-}
-
-bool CUIWindowBase::IsFloat()
-{
-	return m_bFloat;
-}
-
-bool CUIWindowBase::IsPlaceHolder()
-{
-	return m_bPlaceHolder;
-}
-
-void CUIWindowBase::GetRect(CRect& rcWnd)
-{
-	rcWnd = m_rcWnd;
-}
-
-void CUIWindowBase::SetRect( const CRect& rcWnd )
-{
-	m_rcWnd = rcWnd;
-}
-
-bool CUIWindowBase::IsVisible()
-{
-	return m_bVisible;
-}
-
-void CUIWindowBase::GetBkImg( std::wstring& strBgImg )
-{
-	strBgImg = m_strBkImg;
-}
-
-void CUIWindowBase::SetBkImg( const std::wstring& strBgImg )
-{
-	m_strBkImg = strBgImg;
-}
-
-Gdiplus::ARGB CUIWindowBase::GetBkClr()
-{
-	return m_bkColor;
-}
-
-void CUIWindowBase::SetBkClr( const Gdiplus::ARGB& clr )
-{
-	m_bkColor = clr;
-}
-
 void CUIWindowBase::SetMultiLine( bool bMultiLine )
 {
 	if(!bMultiLine){
@@ -101,11 +46,6 @@ void CUIWindowBase::SetTextAlign(LPCTSTR szTextAlign)
 {
 	m_strTextAlign = szTextAlign;
 	CalcTextFormat(m_strTextAlign, m_stringFormat);
-}
-
-bool CUIWindowBase::IsOverCaption()
-{
-	return m_bOverCaption;
 }
 
 BOOL CUIWindowBase::Create( pugi::xml_node& node )
@@ -296,62 +236,7 @@ BOOL CUIWindowBase::ParseAttribute( pugi::xml_node& node )
 	return TRUE;
 }
 
-void CUIWindowBase::GetInitRect( CRect& rcInit )
-{
-	rcInit = m_rcInit;
-}
-
-void CUIWindowBase::SetInitRect( const CRect& rcInit )
-{
-	m_rcInit = rcInit;
-}
-
-void CUIWindowBase::GetPadding( CRect& rcPadding )
-{
-	rcPadding = m_rcPadding;
-}
-
-void CUIWindowBase::SetPadding( const CRect& rcPadding )
-{
-	m_rcPadding = rcPadding;
-}
-
-void CUIWindowBase::GetMargin( CRect& rcMargin )
-{
-	rcMargin = m_rcMargin;
-}
-
-void CUIWindowBase::SetMargin( const CRect& rcMargin )
-{
-	m_rcMargin = rcMargin;
-}
-
-void CUIWindowBase::GetMinSize( CSize& minSz )
-{
-	minSz = m_minSize;
-}
-
-void CUIWindowBase::GetMaxSize( CSize& maxSz )
-{
-	maxSz = m_maxSize;
-}
-
-CUIWindowBase* CUIWindowBase::GetParent()
-{
-	return m_pParent;
-}
-
-void CUIWindowBase::SetParent( CUIWindowBase* pParent )
-{
-	m_pParent = pParent;
-}
-
-CUIWindowBase* CUIWindowBase::GetRoot()
-{
-	return m_pRoot;
-}
-
-HWND CUIWindowBase::GetRootHandle()
+HWND CUIWindowBase::GetRootHandle() const 
 {
 	CUITopWindow* pTop = dynamic_cast<CUITopWindow*>(GetRoot());
 	return pTop ? pTop->m_hWnd : NULL;
@@ -383,121 +268,125 @@ bool CUIWindowBase::ReleaseCapture()
 	return bOk;
 }
 
-BOOL CUIWindowBase::MoveWindow( LPRECT lprc )
+BOOL CUIWindowBase::MoveWindow( const LPRECT lprc )
 {
 	return MoveWindow(lprc->left,lprc->top,lprc->right-lprc->left,lprc->bottom-lprc->top);
 }
 
-BOOL CUIWindowBase::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
+BOOL CUIWindowBase::MoveWindow( const int nLeft, const int nTop, const int nWidth, const int nHeight )
 {
-	CRect rcOld = m_rcWnd;
+	const CRect rcOld = m_rcWnd;
 
 	m_rcWnd.left = nLeft;
 	m_rcWnd.top = nTop;
 	m_rcWnd.right = m_rcWnd.left + nWidth;
 	m_rcWnd.bottom = m_rcWnd.top + nHeight;
 
-	SendDuiMessage(WM_SIZE, this);
+	if(rcOld != m_rcWnd)
+	{
+		SendDuiMessage(WM_SIZE, this);
+		SendDuiMessage(WM_MOVE, this);
+	}
 
 	return TRUE;
 }
 
-bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcNew)
+bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes)
 {
 	const int nWidth = rcCtrlInit.Width()>=0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();
 	const int nHeight = rcCtrlInit.Height()>=0 ? rcCtrlInit.Height() : rcParent.Height() + rcCtrlInit.Height();
 	if(strAlign.empty()){
-		rcNew.left = (rcCtrlInit.left>=0 ? rcParent.left : rcParent.right)+rcCtrlInit.left;
-		rcNew.top = (rcCtrlInit.top>=0 ? rcParent.top : rcParent.bottom)+rcCtrlInit.top;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.left = (rcCtrlInit.left>=0 ? rcParent.left : rcParent.right)+rcCtrlInit.left;
+		rcRes.top = (rcCtrlInit.top>=0 ? rcParent.top : rcParent.bottom)+rcCtrlInit.top;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("lefttop")){
-		rcNew.left = rcParent.left;
-		rcNew.top = rcParent.top;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.left = rcParent.left;
+		rcRes.top = rcParent.top;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("left")){
-		rcNew.left = rcParent.left;
-		rcNew.top = rcParent.top + (rcParent.Height()-nHeight)/2;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcNew.top + nHeight;		
+		rcRes.left = rcParent.left;
+		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcRes.top + nHeight;		
 	}
 	else if(strAlign == _T("leftfull")){
-		rcNew.left = rcParent.left;
-		rcNew.top = rcParent.top;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcParent.bottom;
+		rcRes.left = rcParent.left;
+		rcRes.top = rcParent.top;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcParent.bottom;
 	}
 	else if(strAlign == _T("leftbottom")){
-		rcNew.left = rcCtrlInit.left;
-		rcNew.bottom = rcParent.bottom;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.top = rcNew.bottom - nHeight;
+		rcRes.left = rcCtrlInit.left;
+		rcRes.bottom = rcParent.bottom;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.top = rcRes.bottom - nHeight;
 	}
 	else if(strAlign == _T("bottom")){
-		rcNew.left = rcParent.left + (rcParent.Width()-nWidth)/2;
-		rcNew.bottom = rcParent.bottom;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.top = rcNew.bottom - nHeight;
+		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
+		rcRes.bottom = rcParent.bottom;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.top = rcRes.bottom - nHeight;
 	}
 	else if(strAlign == _T("bottomfull")){
-		rcNew.left = rcParent.left;
-		rcNew.right = rcParent.right;
-		rcNew.bottom = rcParent.bottom;
-		rcNew.top = rcNew.bottom - nHeight;
+		rcRes.left = rcParent.left;
+		rcRes.right = rcParent.right;
+		rcRes.bottom = rcParent.bottom;
+		rcRes.top = rcRes.bottom - nHeight;
 	}
 	else if(strAlign == _T("rightbottom")){
-		rcNew.right = rcParent.right;
-		rcNew.bottom = rcParent.bottom;
-		rcNew.left = rcNew.right - nWidth;
-		rcNew.top = rcNew.bottom - nHeight;
+		rcRes.right = rcParent.right;
+		rcRes.bottom = rcParent.bottom;
+		rcRes.left = rcRes.right - nWidth;
+		rcRes.top = rcRes.bottom - nHeight;
 	}
 	else if(strAlign == _T("right")){
-		rcNew.right = rcParent.right;
-		rcNew.left = rcNew.right - nWidth;
-		rcNew.top = rcParent.top + (rcParent.Height()-nHeight)/2;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.right = rcParent.right;
+		rcRes.left = rcRes.right - nWidth;
+		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("rightfull")){
-		rcNew.top = rcParent.top;
-		rcNew.bottom = rcParent.bottom;
-		rcNew.right = rcParent.right;
-		rcNew.left = rcNew.right - nWidth;
+		rcRes.top = rcParent.top;
+		rcRes.bottom = rcParent.bottom;
+		rcRes.right = rcParent.right;
+		rcRes.left = rcRes.right - nWidth;
 	}
 	else if(strAlign == _T("righttop")){
-		rcNew.top = rcParent.top;
-		rcNew.right = rcParent.right;
-		rcNew.left = rcNew.right - nWidth;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.top = rcParent.top;
+		rcRes.right = rcParent.right;
+		rcRes.left = rcRes.right - nWidth;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("top")){
-		rcNew.top = rcParent.top;
-		rcNew.left = rcParent.left + (rcParent.Width()-nWidth)/2;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.top = rcParent.top;
+		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("topfull")){
-		rcNew.left = rcParent.left;
-		rcNew.top = rcParent.top;
-		rcNew.right = rcParent.right;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.left = rcParent.left;
+		rcRes.top = rcParent.top;
+		rcRes.right = rcParent.right;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("center")){
-		rcNew.left = rcParent.left + (rcParent.Width()-nWidth)/2;
-		rcNew.top = rcParent.top + (rcParent.Height()-nHeight)/2;
-		rcNew.right = rcNew.left + nWidth;
-		rcNew.bottom = rcNew.top + nHeight;
+		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
+		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
+		rcRes.right = rcRes.left + nWidth;
+		rcRes.bottom = rcRes.top + nHeight;
 	}
 	else if(strAlign == _T("full")){
-		rcNew = rcParent;
+		rcRes = rcParent;
 	}
 	
 	return true;
 }
 
-bool CUIWindowBase::CalcWindowFloatPos(CRect& rcWnd)
+bool CUIWindowBase::CalcWindowFloatPos(CRect& rcRes) const
 {
 	CRect rcParent;
 	if(m_pParent){
@@ -506,7 +395,30 @@ bool CUIWindowBase::CalcWindowFloatPos(CRect& rcWnd)
 	else{
 		ATLASSERT(false);
 	}
-	return CalcWindowFloatPos(rcParent, m_rcInit, m_strAlign, rcWnd);
+	return CalcWindowFloatPos(rcParent, m_rcInit, m_strAlign, rcRes);
+}
+
+bool CUIWindowBase::CalcWindowPos( const CRect& rcSpace, CRect& rcRes ) const
+{
+	rcRes = rcSpace;
+	int nWidth = rcSpace.Width();
+	int nHeight = rcSpace.Height();
+	if(m_rcInit.Width()!=0){
+		nWidth = m_rcInit.Width();
+	}
+	if(m_rcInit.Height()!=0){
+		nHeight = m_rcInit.Height();
+	}
+	
+	if((m_maxSize.cx|m_maxSize.cy) != 0){
+		nWidth = max(nWidth, m_maxSize.cx);
+		nHeight = max(nHeight, m_maxSize.cy);
+	}
+	
+	rcRes.right = rcRes.left + nWidth;
+	rcRes.bottom = rcRes.top + nHeight;
+
+	return true;
 }
 
 bool CUIWindowBase::CalcTextFormat( const std::wstring strTextAlign, Gdiplus::StringFormat& format )
@@ -565,7 +477,8 @@ void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics )
 {
 	if(!m_strBkImg.empty()){
 		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str());
-		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(m_rcWnd),0,0,pImage->GetWidth(),pImage->GetHeight(),UnitPixel);
+		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(m_rcWnd),
+			0,0,(Gdiplus::REAL)pImage->GetWidth(),(Gdiplus::REAL)pImage->GetHeight(),UnitPixel);
 	}
 	else{
 		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRectF(m_rcWnd));

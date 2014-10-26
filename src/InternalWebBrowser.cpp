@@ -19,7 +19,11 @@ public:
 			CreateControl(_T("{8856F961-340A-11D0-A96B-00C04FD705A2}"));
 			HRESULT hr = QueryControl(&m_webBrowser2);
 			ATLASSERT(SUCCEEDED(hr));
+			if(SUCCEEDED(hr)){
+				m_webBrowser2->put_Silent(VARIANT_TRUE);
+			}
 		}
+		ShowWindow(SW_SHOW);
 		return SetWindowPos(NULL, rcWnd, SWP_SHOWWINDOW);
 	};
 
@@ -27,8 +31,8 @@ public:
 		return ShowWindow(SW_HIDE);
 	};
 
-	BOOL RePos(){
-		if(IsWindowVisible()){
+	BOOL RePos(bool bForce = false){
+		if(bForce || IsWindowVisible()){
 			CRect rcWnd;
 			m_pUIWebBrowser->GetRect(rcWnd);
 			return SetWindowPos(NULL,rcWnd,SWP_SHOWWINDOW);

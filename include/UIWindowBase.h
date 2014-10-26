@@ -12,60 +12,63 @@ public:
 	BEGIN_DUI_MSG_MAP(CUIWindowBase)
 	END_DUI_MSG_MAP()
 
-	std::wstring GetName();
-	void SetName(LPCTSTR szName);
-	CUIWindowBase* GetParent();
-	void SetParent(CUIWindowBase* pParent);
-	CUIWindowBase* GetRoot();
-	HWND GetRootHandle();
+	std::wstring GetName() const {return m_strName;};
+	void SetName(LPCTSTR szName) { m_strName = szName?szName:_T("NULL"); };
+	CUIWindowBase* GetParent()const {return m_pParent;};
+	void SetParent(CUIWindowBase* pParent){ m_pParent = pParent; };
+	CUIWindowBase* GetRoot()const { return m_pRoot; };
+	HWND GetRootHandle() const;
 	bool SetCapture();
 	bool ReleaseCapture();
-	virtual BOOL MoveWindow(LPRECT lprc);
-	virtual BOOL MoveWindow(int nLeft, int nTop, int nWidth, int nHeight);
+	virtual BOOL MoveWindow(const LPRECT lprc);
+	virtual BOOL MoveWindow(const int nLeft, const int nTop, const int nWidth, const int nHeight);
 
-	bool IsFloat();
-	bool IsPlaceHolder();
-	void GetRect(CRect& rcWnd);
-	void SetRect(const CRect& rcWnd);
-	void GetInitRect(CRect& rcInit);
-	void SetInitRect(const CRect& rcInit);
-	void GetPadding(CRect& rcPadding);
-	void SetPadding(const CRect& rcPadding);
-	void GetMargin(CRect& rcMargin);
-	void SetMargin(const CRect& rcMargin);
-	void GetMinSize(CSize& minSz);
-	void GetMaxSize(CSize& maxSz);
-	bool IsVisible();
-	void GetBkImg(std::wstring& strBgImg);
-	void SetBkImg(const std::wstring& strBgImg);
-	Gdiplus::ARGB GetBkClr();
-	void SetBkClr(const Gdiplus::ARGB& clr);
-	std::wstring GetText(){ return m_strText; };
+	bool IsFloat() const { return m_bFloat; };
+	bool IsPlaceHolder() const { return m_bPlaceHolder; };
+	void GetRect(CRect& rcWnd) const { rcWnd = m_rcWnd; };
+	void SetRect(const CRect& rcWnd) { m_rcWnd = rcWnd; };
+	void GetInitRect(CRect& rcInit) const { rcInit = m_rcInit; };
+	void SetInitRect(const CRect& rcInit) { m_rcInit = rcInit; };
+	void GetPadding(CRect& rcPadding) const { rcPadding = m_rcPadding; };
+	void SetPadding(const CRect& rcPadding) { m_rcPadding = rcPadding; };
+	void GetMargin(CRect& rcMargin) const { rcMargin = m_rcMargin; };
+	void SetMargin(const CRect& rcMargin) { m_rcMargin = rcMargin; };
+	void GetMinSize(CSize& minSz) const { minSz = m_minSize; };
+	void GetMaxSize(CSize& maxSz) const { maxSz = m_maxSize; };
+	bool IsVisible() const { return m_bVisible; };
+	void GetBkImg(std::wstring& strBkImg) const { strBkImg = m_strBkImg; };
+	void SetBkImg(const std::wstring& strBkImg) { m_strBkImg = strBkImg; };
+	Gdiplus::ARGB GetBkClr() const { return m_bkColor; };
+	void SetBkClr(const Gdiplus::ARGB& clr) { m_bkColor = clr; };
+	std::wstring GetText() const { return m_strText; };
 	void SetText(LPCTSTR szText){ m_strText = szText; };
-	int GetFontSize(){ return m_nFontSize; };
+	int GetFontSize() const { return m_nFontSize; };
 	void SetFontSize(int nSize){ m_nFontSize = nSize; };
-	Gdiplus::ARGB GetTextColor(){ return m_textColor; };
+	Gdiplus::ARGB GetTextColor() const { return m_textColor; };
 	void SetTextColor(const Gdiplus::ARGB& clr){ m_textColor = clr; };
-	std::wstring GetFontFamily(){ return m_strFontFamily; };
+	std::wstring GetFontFamily() const { return m_strFontFamily; };
 	void SetFontFamily(LPCTSTR szFontFamily){ m_strFontFamily=szFontFamily; };
-	bool IsBold(){return m_bBold;}
-	bool IsItalic(){return m_bItalic;}
-	bool IsUnderline(){ return m_bUnderline; }
-	bool IsStrikout(){ return m_bStrikout; }
-	bool IsMultiLine(){ return m_bMultiLine; }
+	bool IsBold() const {return m_bBold;}
+	bool IsItalic() const {return m_bItalic;}
+	bool IsUnderline() const { return m_bUnderline; }
+	bool IsStrikout() const { return m_bStrikout; }
+	bool IsMultiLine() const { return m_bMultiLine; }
 	void SetMultiLine(bool bMultiLine);
-	std::wstring GetTextAlign(){ return m_strTextAlign; }
+	std::wstring GetTextAlign() const { return m_strTextAlign; }
 	void SetTextAlign(LPCTSTR szTextAlign);
 
-	bool IsOverCaption();
+	bool IsOverCaption() const { return m_bOverCaption; };
 
 
 	virtual BOOL Create(pugi::xml_node& node);
 	virtual BOOL ParseAttribute(pugi::xml_node& node);
 
-	//布局
-	static bool CalcWindowFloatPos(const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcNew);
-	bool CalcWindowFloatPos(CRect& rcWnd);
+	//绝对布局
+	static bool CalcWindowFloatPos(const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes);
+	bool CalcWindowFloatPos(CRect& rcRes) const;
+	//相对布局
+	bool CalcWindowPos(const CRect& rcSpace, CRect& rcRes) const ;
+
 	//文字对齐方式
 	static bool CalcTextFormat(const std::wstring strTextAlign, Gdiplus::StringFormat& format);
 

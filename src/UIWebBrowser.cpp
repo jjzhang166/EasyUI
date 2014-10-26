@@ -18,6 +18,20 @@ CUIWebBrowser::~CUIWebBrowser()
 	}
 }
 
+BOOL CUIWebBrowser::ParseAttribute( pugi::xml_node& node )
+{
+	__super::ParseAttribute(node);
+
+	pugi::xml_attribute attr;
+	attr = node.attribute(_T("home_page"));
+	if(attr){
+		m_strUrlHome = attr.as_string();
+	}
+
+	return TRUE;
+}
+
+
 LRESULT CUIWebBrowser::dui_OnCreate( const CDuiMSG& duiMSG, BOOL& bHandled )
 {
 	m_pInternalWebBrowser->Show();
@@ -27,12 +41,17 @@ LRESULT CUIWebBrowser::dui_OnCreate( const CDuiMSG& duiMSG, BOOL& bHandled )
 
 LRESULT CUIWebBrowser::dui_OnSize( const CDuiMSG& duiMSG, BOOL& bHandled )
 {
-	m_pInternalWebBrowser->RePos();
+	if(IsVisible()){
+		m_pInternalWebBrowser->RePos(true);
+	}
+	
 	return TRUE;
 }
 
 LRESULT CUIWebBrowser::dui_OnMove( const CDuiMSG& duiMSG, BOOL& bHandled )
 {
-	m_pInternalWebBrowser->RePos();
+	if(IsVisible()){
+		m_pInternalWebBrowser->RePos(true);
+	}
 	return TRUE;
 }

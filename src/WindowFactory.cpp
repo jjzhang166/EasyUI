@@ -24,6 +24,9 @@ CUIWindowBase* CWindowFactory::GetObject( LPCTSTR szType, CUIWindowBase* pParent
 	else if(_tcsicmp(szType, _T("button")) == 0){
 		pWindow = new CUIButton(pParent);
 	}
+	else if(_tcsicmp(szType, _T("container")) == 0){
+		pWindow = new CUIContainerWindowBase(pParent);
+	}
 	else if(_tcsicmp(szType, _T("hori_layout")) == 0){
 		pWindow = new CUIHoriLayout(pParent);
 	}
