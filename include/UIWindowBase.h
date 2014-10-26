@@ -74,9 +74,9 @@ public:
 
 	//»æÖÆ
 	virtual void DoPaint(Gdiplus::Graphics* pGraphics);
-	virtual void PaintBkGnd(Gdiplus::Graphics* pGraphics);
-	virtual void PaintBorder(Gdiplus::Graphics* pGraphics);
-	virtual void PaintText(Gdiplus::Graphics* pGraphics);
+	virtual void PaintBkGnd(Gdiplus::Graphics* pGraphics, const CRect& rcArea);
+	virtual void PaintBorder(Gdiplus::Graphics* pGraphics, const CRect& rcArea);
+	virtual void PaintText(Gdiplus::Graphics* pGraphics, const CRect& rcArea);
 
 	void UIInvalidate();
 	

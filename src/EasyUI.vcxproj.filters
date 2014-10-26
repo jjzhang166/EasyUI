@@ -84,16 +84,19 @@
     <ClInclude Include="..\include\UILabel.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\UIVertLayout.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\UIHoriLayout.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\UIEdit.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\UIWebBrowser.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UIRadio.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UIRadioGroup.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UIContainerWindow.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -146,16 +149,19 @@
     <ClCompile Include="UILabel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UIVertLayout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UIHoriLayout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIEdit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UIWebBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRadio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRadioGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIContainerWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

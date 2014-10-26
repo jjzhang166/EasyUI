@@ -14,19 +14,20 @@ public:
 
 	virtual BOOL ParseAttribute( pugi::xml_node& node );
 
-	LRESULT dui_OnMouseEnter(const CDuiMSG& duiMsg, BOOL bHandled);
-	LRESULT dui_OnMouseLeave(const CDuiMSG& duiMsg,  BOOL bHandled);
-	LRESULT dui_OnLButtonDown(const CDuiMSG& duiMsg,  BOOL bHandled);
+	LRESULT dui_OnMouseEnter(const CDuiMSG& duiMsg, BOOL& bHandled);
+	LRESULT dui_OnMouseLeave(const CDuiMSG& duiMsg,  BOOL& bHandled);
+	LRESULT dui_OnLButtonDown(const CDuiMSG& duiMsg,  BOOL& bHandled);
 	//LRESULT dui_OnLButtonDbClk(const CDuiMSG& duiMsg,  BOOL bHandled);
-	LRESULT dui_OnLButtonUp(const CDuiMSG& duiMsg,  BOOL bHandled);
+	LRESULT dui_OnLButtonUp(const CDuiMSG& duiMsg,  BOOL& bHandled);
 
-	virtual void PaintBkGnd(Gdiplus::Graphics* pGraphics);
+	virtual void PaintBkGnd(Gdiplus::Graphics* pGraphics, const CRect& rcArea);
 
 protected:
 	bool m_bHover;
 	bool m_bPress;
 
-	std::wstring m_str3StateImg;
+	std::wstring m_strStateImg;
+	int m_nStateCount;	//3state or 4state
 };
 
 

@@ -82,6 +82,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BrushFactory.h" />
+    <ClInclude Include="..\include\UIContainerWindow.h" />
+    <ClInclude Include="..\include\UIRadio.h" />
     <ClInclude Include="..\include\UIContainerWindowBase.h" />
     <ClInclude Include="..\include\UIButton.h" />
     <ClInclude Include="..\include\UIEdit.h" />
@@ -91,14 +93,13 @@
     <ClInclude Include="..\include\FontFactory.h" />
     <ClInclude Include="..\include\GdiplusHelper.h" />
     <ClInclude Include="..\include\GdiplusInit.h" />
-    <ClInclude Include="..\include\UIHoriLayout.h" />
     <ClInclude Include="..\include\ImageFactory.h" />
     <ClInclude Include="..\include\MessageHandler.h" />
     <ClInclude Include="..\include\ParserHelper.h" />
     <ClInclude Include="..\include\PenFactory.h" />
     <ClInclude Include="..\include\SmartDC.h" />
+    <ClInclude Include="..\include\UIRadioGroup.h" />
     <ClInclude Include="..\include\UITopWindow.h" />
-    <ClInclude Include="..\include\UIVertLayout.h" />
     <ClInclude Include="..\include\UIWebBrowser.h" />
     <ClInclude Include="..\include\UIWindowBase.h" />
     <ClInclude Include="..\include\WindowFactory.h" />
@@ -109,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrushFactory.cpp" />
+    <ClCompile Include="UIContainerWindow.cpp" />
     <ClCompile Include="UIContainerWindowBase.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UIEdit.cpp" />
@@ -116,7 +118,6 @@
     <ClCompile Include="EasyUIApp.cpp" />
     <ClCompile Include="FontFactory.cpp" />
     <ClCompile Include="GdiplusHelper.cpp" />
-    <ClCompile Include="UIHoriLayout.cpp" />
     <ClCompile Include="ImageFactory.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="ParserHelper.cpp" />
@@ -129,8 +130,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UIRadio.cpp" />
+    <ClCompile Include="UIRadioGroup.cpp" />
     <ClCompile Include="UITopWindow.cpp" />
-    <ClCompile Include="UIVertLayout.cpp" />
     <ClCompile Include="UIWebBrowser.cpp" />
     <ClCompile Include="UIWindowBase.cpp" />
     <ClCompile Include="WindowFactory.cpp" />

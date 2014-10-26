@@ -1,7 +1,8 @@
 #pragma once
 
-class EASYUI_API CUITopWindow	: public CWindowImpl<CUITopWindow>
-						, public CUIContainerWindowBase
+class EASYUI_API CUITopWindow	
+	: public CWindowImpl<CUITopWindow>
+	, public CUIContainerWindow
 {
 public:
 	CUITopWindow(void);
@@ -34,10 +35,10 @@ public:
 
 	BEGIN_DUI_MSG_MAP(CUITopWindow)
 		DUI_MSG_HANDLER(WM_SIZE, dui_OnSize)
-		CHAIN_DUI_MSG_MAP(CUIContainerWindowBase)
+		CHAIN_DUI_MSG_MAP(CUIContainerWindow)
 	END_DUI_MSG_MAP()
 
-	LRESULT dui_OnSize(const CDuiMSG& duiMsg, BOOL bHandled);
+	LRESULT dui_OnSize(const CDuiMSG& duiMsg, BOOL& bHandled);
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);

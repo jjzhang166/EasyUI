@@ -13,7 +13,7 @@ public:
 		CHAIN_DUI_MSG_MAP(CUIWindowBase)
 	END_DUI_MSG_MAP()
 
-	LRESULT dui_OnSize(const CDuiMSG& duiMsg, BOOL bHandled);
+	LRESULT dui_OnSize(const CDuiMSG& duiMsg, BOOL& bHandled);
 
 	//find function
 	CUIWindowBase* ForwardFindChild(const std::function<bool(CUIWindowBase*)>& pred);

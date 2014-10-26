@@ -16,6 +16,7 @@ public:
 		DUI_MSG_HANDLER(WM_KILLFOCUS, dui_OnKillFocus)
 		DUI_MSG_HANDLER(WM_SIZE, dui_OnSize)
 		DUI_MSG_HANDLER(WM_MOVE, dui_OnMove)
+		CHAIN_DUI_MSG_MAP(CUILabel)
 	END_DUI_MSG_MAP()
 
 	LRESULT dui_OnLButtonDown(const CDuiMSG& duiMSG, BOOL& bHandled);

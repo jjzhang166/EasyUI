@@ -25,19 +25,19 @@ CUIWindowBase* CWindowFactory::GetObject( LPCTSTR szType, CUIWindowBase* pParent
 		pWindow = new CUIButton(pParent);
 	}
 	else if(_tcsicmp(szType, _T("container")) == 0){
-		pWindow = new CUIContainerWindowBase(pParent);
-	}
-	else if(_tcsicmp(szType, _T("hori_layout")) == 0){
-		pWindow = new CUIHoriLayout(pParent);
-	}
-	else if(_tcsicmp(szType, _T("vert_layout")) == 0){
-		pWindow = new CUIVertLayout(pParent);
+		pWindow = new CUIContainerWindow(pParent);
 	}
 	else if(_tcsicmp(szType, _T("edit")) == 0){
 		pWindow = new CUIEdit(pParent);
 	}
 	else if(_tcsicmp(szType, _T("web_browser")) == 0){
 		pWindow = new CUIWebBrowser(pParent);
+	}
+	else if(_tcsicmp(szType, _T("radio_group")) == 0){
+		pWindow = new CUIRadioGroup(pParent);
+	}
+	else if(_tcsicmp(szType, _T("radio")) == 0){
+		pWindow = new CUIRadio(pParent);
 	}
 
 	ATLASSERT(pWindow);

@@ -57,11 +57,12 @@ class EASYUI_API CUIWindowBase;
 #include <ImageFactory.h>
 
 #include <WindowFactory.h>
+#include <UIContainerWindow.h>
 #include <UITopWindow.h>
-#include <UIHoriLayout.h>
-#include <UIVertLayout.h>
 #include <UILabel.h>
 #include <UIButton.h>
 #include <UIEdit.h>
 #include <UIWebBrowser.h>
+#include <UIRadioGroup.h>
+#include <UIRadio.h>
 

@@ -10,13 +10,9 @@ CUIContainerWindowBase::~CUIContainerWindowBase(void)
 {
 }
 
-LRESULT CUIContainerWindowBase::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
+LRESULT CUIContainerWindowBase::dui_OnSize( const CDuiMSG& duiMsg, BOOL& bHandled )
 {
-	for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
-		CRect rcWnd;
-		(*iter)->CalcWindowFloatPos(rcWnd);
-		(*iter)->MoveWindow(rcWnd);
-	}
+	ATLASSERT(FALSE);
 
 	return TRUE;
 }

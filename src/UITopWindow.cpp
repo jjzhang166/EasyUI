@@ -4,7 +4,7 @@ using namespace pugi;
 
 
 CUITopWindow::CUITopWindow(void)
-	: CUIContainerWindowBase(NULL)
+	: CUIContainerWindow(NULL)
 	, m_pFocusWindow(NULL)
 	, m_pHoverWindow(NULL)
 	, m_pCaptureWindow(NULL)
@@ -21,7 +21,7 @@ CUITopWindow::~CUITopWindow(void)
 	m_pHoverWindow = NULL;
 }
 
-LRESULT CUITopWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL bHandled )
+LRESULT CUITopWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL& bHandled )
 {
 	CSize szWnd(GET_X_LPARAM(duiMsg.lParam),GET_Y_LPARAM(duiMsg.lParam));
 	m_rcWnd.SetRect(0,0,szWnd.cx,szWnd.cy);
@@ -126,12 +126,12 @@ LRESULT CUITopWindow::OnMouseLeave( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	return TRUE;
 }
 
-LRESULT CUITopWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
+LRESULT CUITopWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {
 	bHandled = FALSE;
 
 	if(GetCaptureWindow()){
-		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDOWN);
+		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDOWN,this, wParam, lParam);
 	}
 	else{
 		CUIWindowBase* pNewFocusWindow = GetHoverWindow();
@@ -140,38 +140,38 @@ LRESULT CUITopWindow::OnLButtonDown( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*
 		if(pNewFocusWindow != pOldFocusWindow){
 			SetFocusWindow(pNewFocusWindow);
 			if(pOldFocusWindow)
-				pOldFocusWindow->SendDuiMessage(WM_KILLFOCUS);
+				pOldFocusWindow->SendDuiMessage(WM_KILLFOCUS, this, wParam, lParam);
 			if(pNewFocusWindow)
-				pNewFocusWindow->SendDuiMessage(WM_SETFOCUS);
+				pNewFocusWindow->SendDuiMessage(WM_SETFOCUS, this, wParam, lParam);
 		}
 
-		if(pNewFocusWindow)pNewFocusWindow->SendDuiMessage(WM_LBUTTONDOWN);
+		if(pNewFocusWindow)pNewFocusWindow->SendDuiMessage(WM_LBUTTONDOWN, this, wParam, lParam);
 	}
 
 	return TRUE;
 }
 
-LRESULT CUITopWindow::OnLButtonUp( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
+LRESULT CUITopWindow::OnLButtonUp( UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/ )
 {
 	if(GetCaptureWindow()){
-		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONUP,this);
+		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONUP,this, wParam, lParam);
 	}
 	else{
 		CUIWindowBase* pFocusWindow = GetFocusWindow();
 		if(pFocusWindow){
-			pFocusWindow->SendDuiMessage(WM_LBUTTONUP);
+			pFocusWindow->SendDuiMessage(WM_LBUTTONUP,this, wParam, lParam);
 		}
 	}
 
 	return TRUE;
 }
 
-LRESULT CUITopWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled )
+LRESULT CUITopWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {
 	bHandled = FALSE;
 
 	if(GetCaptureWindow()){
-		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDBLCLK);
+		GetCaptureWindow()->SendDuiMessage(WM_LBUTTONDBLCLK,this, wParam, lParam);
 	}
 	else{
 		CUIWindowBase* pNewFocusWindow = GetHoverWindow();
@@ -180,12 +180,12 @@ LRESULT CUITopWindow::OnLButtonDbClk( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /
 		if(pNewFocusWindow != pOldFocusWindow){
 			SetFocusWindow(pNewFocusWindow);
 			if(pOldFocusWindow)
-				pOldFocusWindow->SendDuiMessage(WM_KILLFOCUS);
+				pOldFocusWindow->SendDuiMessage(WM_KILLFOCUS,this, wParam, lParam);
 			if(pNewFocusWindow)
-				pNewFocusWindow->SendDuiMessage(WM_SETFOCUS);
+				pNewFocusWindow->SendDuiMessage(WM_SETFOCUS,this, wParam, lParam);
 		}
 
-		if(pNewFocusWindow)pNewFocusWindow->SendDuiMessage(WM_LBUTTONDBLCLK);
+		if(pNewFocusWindow)pNewFocusWindow->SendDuiMessage(WM_LBUTTONDBLCLK,this, wParam, lParam);
 	}
 
 	return TRUE;
@@ -334,7 +334,7 @@ LRESULT CUITopWindow::OnKillFocus( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 
 BOOL CUITopWindow::MoveWindow( LPRECT lprc )
 {
-	CUIContainerWindowBase::MoveWindow(lprc);
+	CUIContainerWindow::MoveWindow(lprc);
 	CWindowImpl<CUITopWindow>::MoveWindow(lprc);
 
 	return TRUE;
@@ -342,7 +342,7 @@ BOOL CUITopWindow::MoveWindow( LPRECT lprc )
 
 BOOL CUITopWindow::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
 {
-	CUIContainerWindowBase::MoveWindow(nLeft,nTop,nWidth,nHeight);
+	CUIContainerWindow::MoveWindow(nLeft,nTop,nWidth,nHeight);
 	CWindowImpl<CUITopWindow>::MoveWindow(nLeft,nTop,nWidth,nHeight);
 
 	return TRUE;

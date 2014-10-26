@@ -293,8 +293,8 @@ BOOL CUIWindowBase::MoveWindow( const int nLeft, const int nTop, const int nWidt
 
 bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes)
 {
-	const int nWidth = rcCtrlInit.Width()>=0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();
-	const int nHeight = rcCtrlInit.Height()>=0 ? rcCtrlInit.Height() : rcParent.Height() + rcCtrlInit.Height();
+	const int nWidth = rcCtrlInit.Width()>0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();
+	const int nHeight = rcCtrlInit.Height()>0 ? rcCtrlInit.Height() : rcParent.Height() + rcCtrlInit.Height();
 	if(strAlign.empty()){
 		rcRes.left = (rcCtrlInit.left>=0 ? rcParent.left : rcParent.right)+rcCtrlInit.left;
 		rcRes.top = (rcCtrlInit.top>=0 ? rcParent.top : rcParent.bottom)+rcCtrlInit.top;
@@ -468,39 +468,39 @@ bool CUIWindowBase::CalcTextFormat( const std::wstring strTextAlign, Gdiplus::St
 
 void CUIWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
 {
-	PaintBkGnd(pGraphics);
-	PaintBorder(pGraphics);
-	PaintText(pGraphics);
+	PaintBkGnd(pGraphics, m_rcWnd);
+	PaintBorder(pGraphics, m_rcWnd);
+	PaintText(pGraphics, m_rcWnd);
 }
 
-void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics , const CRect& rcArea)
 {
 	if(!m_strBkImg.empty()){
 		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str());
-		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(m_rcWnd),
+		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(rcArea),
 			0,0,(Gdiplus::REAL)pImage->GetWidth(),(Gdiplus::REAL)pImage->GetHeight(),UnitPixel);
 	}
 	else{
-		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRectF(m_rcWnd));
+		pGraphics->FillRectangle(CBrushFactory::GetInst()->GetObject(m_bkColor),GdiplusHelper::Rect2GPRectF(rcArea));
 	}
 }
 
-void CUIWindowBase::PaintBorder( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintBorder( Gdiplus::Graphics* pGraphics , const CRect& rcArea)
 {
 	if(m_nBorderWidth){
 		Pen* pPen = CPenFactory::GetPen(m_borderColor,m_nBorderWidth);
 		pPen->SetAlignment(PenAlignmentInset);
-		pGraphics->DrawRectangle(pPen,GdiplusHelper::Rect2GPRectF(m_rcWnd));
+		pGraphics->DrawRectangle(pPen,GdiplusHelper::Rect2GPRectF(rcArea));
 		pPen->SetAlignment(PenAlignmentCenter);
 	}
 }
 
-void CUIWindowBase::PaintText( Gdiplus::Graphics* pGraphics )
+void CUIWindowBase::PaintText( Gdiplus::Graphics* pGraphics , const CRect& rcArea)
 {
 	if(!m_strText.empty()){
 		Font* pFont = CFontFactory::GetFont(m_strFontFamily.c_str(),m_nFontSize,m_bBold,m_bUnderline,m_bStrikout);
 		Brush* pBrush = CBrushFactory::GetBrush(m_textColor);
-		pGraphics->DrawString( m_strText.c_str(), -1,pFont, GdiplusHelper::Rect2GPRectF(m_rcWnd), &m_stringFormat, pBrush);
+		pGraphics->DrawString( m_strText.c_str(), -1,pFont, GdiplusHelper::Rect2GPRectF(rcArea), &m_stringFormat, pBrush);
 	}
 }
 
