@@ -99,6 +99,9 @@
     <ClInclude Include="..\include\UIContainerWindow.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\WindowInfo.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UIContainerWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

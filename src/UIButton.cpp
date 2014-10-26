@@ -106,7 +106,7 @@ void CUIButton::PaintBkGnd( Gdiplus::Graphics* pGraphics, const CRect& rcArea)
 		}
 	}
 
-	Image* pImage = CImageFactory::GetImage(m_strStateImg.c_str());
+	Image* pImage = CImageFactory::GetImage(m_strStateImg.c_str(), GetWindowInfo());
 	const int nCXImg = pImage->GetWidth()/m_nStateCount;
 	const int nCYImg = pImage->GetHeight();
 	

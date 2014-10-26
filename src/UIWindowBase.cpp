@@ -242,6 +242,18 @@ HWND CUIWindowBase::GetRootHandle() const
 	return pTop ? pTop->m_hWnd : NULL;
 }
 
+CWindowInfo* CUIWindowBase::GetWindowInfo() const 
+{
+	CUITopWindow* pTop = dynamic_cast<CUITopWindow*>(GetRoot());
+	if(pTop){
+		return pTop->GetWindowInfo();
+	}
+	else{
+		ATLASSERT(FALSE);
+		return NULL;
+	}
+}
+
 bool CUIWindowBase::SetCapture()
 {
 	bool bOk = false;
@@ -476,7 +488,7 @@ void CUIWindowBase::DoPaint( Gdiplus::Graphics* pGraphics )
 void CUIWindowBase::PaintBkGnd( Gdiplus::Graphics* pGraphics , const CRect& rcArea)
 {
 	if(!m_strBkImg.empty()){
-		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str());
+		Image* pImage = CImageFactory::GetInst()->GetObject(m_strBkImg.c_str(), GetWindowInfo());
 		pGraphics->DrawImage(pImage,GdiplusHelper::Rect2GPRectF(rcArea),
 			0,0,(Gdiplus::REAL)pImage->GetWidth(),(Gdiplus::REAL)pImage->GetHeight(),UnitPixel);
 	}

@@ -103,6 +103,7 @@
     <ClInclude Include="..\include\UIWebBrowser.h" />
     <ClInclude Include="..\include\UIWindowBase.h" />
     <ClInclude Include="..\include\WindowFactory.h" />
+    <ClInclude Include="..\include\WindowInfo.h" />
     <ClInclude Include="pugixml\pugiconfig.hpp" />
     <ClInclude Include="pugixml\pugixml.hpp" />
     <ClInclude Include="stdafx.h" />
@@ -136,6 +137,7 @@
     <ClCompile Include="UIWebBrowser.cpp" />
     <ClCompile Include="UIWindowBase.cpp" />
     <ClCompile Include="WindowFactory.cpp" />
+    <ClCompile Include="WindowInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="InternalWebBrowser.cpp" />

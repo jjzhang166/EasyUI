@@ -11,21 +11,30 @@ CImageFactory* CImageFactory::GetInst()
 	return pInst;
 }
 
-Gdiplus::Image* CImageFactory::GetImage( LPCTSTR strPath )
+Gdiplus::Image* CImageFactory::GetImage( LPCTSTR strPath, CWindowInfo* pWindowInfo )
 {
-	return GetInst()->GetObject(strPath);
+	return GetInst()->GetObject(strPath,pWindowInfo);
 }
 
-Image* CImageFactory::GetObject( LPCTSTR strPath )
+Image* CImageFactory::GetObject( LPCTSTR szPath, CWindowInfo* pWindowInfo )
 {
 	Image* pImage = NULL;
-	IterMapImage iter = m_mapImage.find(std::wstring(strPath));
-	if(m_mapImage.end() == iter){
-		pImage = Image::FromFile(strPath);
-		m_mapImage[strPath] = pImage;
+
+	if(pWindowInfo){
+		std::wstring strFullPath = pWindowInfo->GetSkinDir() + szPath;
+			
+		IterMapImage iter = m_mapImage.find(strFullPath);
+		if(m_mapImage.end() == iter){
+			pImage = Image::FromFile(strFullPath.c_str());
+			m_mapImage[strFullPath] = pImage;
+		}
+		else{
+			pImage = iter->second;
+		}
 	}
 	else{
-		pImage = iter->second;
+		ATLASSERT(pWindowInfo);
 	}
+
 	return pImage;
 }

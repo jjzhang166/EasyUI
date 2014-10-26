@@ -8,9 +8,14 @@ public:
 	CUITopWindow(void);
 	~CUITopWindow(void);
 
-	virtual BOOL IsDUIWindow(){return TRUE;};
+	DECLARE_WND_CLASS(_T("SkinUI_HWND"));
 
-	DECLARE_WND_CLASS(_T("SkinUI_HWND"))
+	virtual BOOL IsDUIWindow(){return TRUE;};
+	virtual BOOL ParseAttribute(pugi::xml_node& node);
+
+	virtual BOOL Create(HWND hWndParent, LPCTSTR szPath);
+	CWindowInfo* GetWindowInfo() {return &m_wndInfo;}
+
 
 	BEGIN_MSG_MAP(CUITopWindow)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
@@ -69,20 +74,17 @@ public:
 	void SetHoverWindow(CUIWindowBase* pWindow);
 	CUIWindowBase* GetCaptureWindow();
 	void SetCaptureWindow(CUIWindowBase* pWindow);
-
-	virtual BOOL ParseAttribute(pugi::xml_node& node);
-	virtual BOOL Create(HWND hWndParent, LPCTSTR szPath);
 	
 protected:
-	CUIWindowBase* m_pFocusWindow;
-	CUIWindowBase* m_pHoverWindow;
-	CUIWindowBase* m_pCaptureWindow;
+	CWindowInfo		m_wndInfo;
+
+	CUIWindowBase*	m_pFocusWindow;
+	CUIWindowBase*	m_pHoverWindow;
+	CUIWindowBase*	m_pCaptureWindow;
 
 	bool			m_bTrackLeave;
 	bool			m_bSizeBox;
 	int				m_nCaption;
 	CRect			m_rcThickFrame;
-	std::wstring	m_strSkinPath;
-
 };
 

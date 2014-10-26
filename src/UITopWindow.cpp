@@ -5,6 +5,7 @@ using namespace pugi;
 
 CUITopWindow::CUITopWindow(void)
 	: CUIContainerWindow(NULL)
+	, m_wndInfo(this)
 	, m_pFocusWindow(NULL)
 	, m_pHoverWindow(NULL)
 	, m_pCaptureWindow(NULL)
@@ -21,8 +22,46 @@ CUITopWindow::~CUITopWindow(void)
 	m_pHoverWindow = NULL;
 }
 
+BOOL CUITopWindow::ParseAttribute( pugi::xml_node& node )
+{
+	__super::ParseAttribute(node);
+
+	pugi::xml_attribute attr;
+	attr = node.attribute(_T("caption"));
+	if(attr){
+		m_nCaption = _ttoi(attr.as_string());
+	}
+
+	attr = node.attribute(_T("thickframe"));
+	if(attr){
+		ParserHelper::String2Rect(attr.as_string(),m_rcThickFrame);
+	}
+
+	attr = node.attribute(_T("sizebox"));
+	if(attr){
+		m_bSizeBox = _tcsicmp(attr.as_string(),_T("true"))==0;
+	}
+
+	return TRUE;
+}
+
+BOOL CUITopWindow::Create(HWND hWndParent, LPCTSTR szPath )
+{
+	if(szPath){
+		m_wndInfo.SetSkinPath(szPath);
+		CreateHWND(hWndParent,CRect(0,0,0,0),WS_CLIPCHILDREN|WS_CLIPSIBLINGS|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SIZEBOX);
+
+		return TRUE;
+	}
+	else{
+		ATLASSERT(FALSE);
+		return FALSE;
+	}
+}
+
 LRESULT CUITopWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL& bHandled )
 {
+	bHandled = FALSE;
 	CSize szWnd(GET_X_LPARAM(duiMsg.lParam),GET_Y_LPARAM(duiMsg.lParam));
 	m_rcWnd.SetRect(0,0,szWnd.cx,szWnd.cy);
 	return TRUE;
@@ -31,7 +70,7 @@ LRESULT CUITopWindow::dui_OnSize( const CDuiMSG& duiMsg, BOOL& bHandled )
 LRESULT CUITopWindow::OnCreate( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/ )
 {
 	xml_document document;
-	document.load_file(m_strSkinPath.c_str());
+	document.load_file(m_wndInfo.GetSkinPath().c_str());
 	xml_node rootNode = document.root();
 	xml_node childNode = rootNode.first_child();
 	__super::Create(childNode);
@@ -334,10 +373,12 @@ LRESULT CUITopWindow::OnKillFocus( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 
 BOOL CUITopWindow::MoveWindow( LPRECT lprc )
 {
-	CUIContainerWindow::MoveWindow(lprc);
-	CWindowImpl<CUITopWindow>::MoveWindow(lprc);
-
-	return TRUE;
+	if(lprc){
+		return MoveWindow(lprc->left, lprc->top, lprc->right-lprc->left, lprc->bottom-lprc->top );
+	}
+	else{
+		return FALSE;
+	}
 }
 
 BOOL CUITopWindow::MoveWindow( int nLeft, int nTop, int nWidth, int nHeight )
@@ -391,33 +432,3 @@ void CUITopWindow::SetCaptureWindow( CUIWindowBase* pWindow )
 	}
 }
 
-BOOL CUITopWindow::ParseAttribute( pugi::xml_node& node )
-{
-	__super::ParseAttribute(node);
-
-	pugi::xml_attribute attr;
-	attr = node.attribute(_T("caption"));
-	if(attr){
-		m_nCaption = _ttoi(attr.as_string());
-	}
-
-	attr = node.attribute(_T("thickframe"));
-	if(attr){
-		ParserHelper::String2Rect(attr.as_string(),m_rcThickFrame);
-	}
-
-	attr = node.attribute(_T("sizebox"));
-	if(attr){
-		m_bSizeBox = _tcsicmp(attr.as_string(),_T("true"))==0;
-	}
-
-	return TRUE;
-}
-
-BOOL CUITopWindow::Create(HWND hWndParent, LPCTSTR szPath )
-{
-	m_strSkinPath = szPath;
-	CreateHWND(hWndParent,CRect(0,0,0,0),WS_CLIPCHILDREN|WS_CLIPSIBLINGS|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_SIZEBOX);
-
-	return TRUE;;
-}

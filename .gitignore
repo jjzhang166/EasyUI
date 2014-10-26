@@ -19,3 +19,5 @@
 *.user
 output
 ipch
+Debug
+Release

@@ -83,7 +83,7 @@ void CUIRadio::PaintBkGnd( Gdiplus::Graphics* pGraphics, const CRect& rcArea )
 {
 	Gdiplus::Image* pStateImage = NULL;
 	if( !m_strStateImg.empty() && m_nStateCount!=0 &&
-		( pStateImage = CImageFactory::GetImage(m_strStateImg.c_str()) ) 
+		( pStateImage = CImageFactory::GetImage(m_strStateImg.c_str(), GetWindowInfo())) 
 		){
 
 		//get per state size
@@ -103,7 +103,7 @@ void CUIRadio::PaintBkGnd( Gdiplus::Graphics* pGraphics, const CRect& rcArea )
 		//draw selected img
 		Gdiplus::Image* pSelectedImg = NULL;
 		if(m_bSelected && !m_strSelectedImg.empty() && 
-			( pSelectedImg = CImageFactory::GetImage(m_strSelectedImg.data()) ) 
+			( pSelectedImg = CImageFactory::GetImage(m_strSelectedImg.c_str(), GetWindowInfo()) ) 
 			){
 				const int nCx = pSelectedImg->GetWidth();
 				const int nCy = pSelectedImg->GetHeight();

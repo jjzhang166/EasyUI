@@ -50,6 +50,7 @@ class EASYUI_API CUIWindowBase;
 #include <UIWindowBase.h>
 #include <UIContainerWindowBase.h>
 #include <EasyUIApp.h>
+#include <WindowInfo.h>
 
 #include <BrushFactory.h>
 #include <PenFactory.h>

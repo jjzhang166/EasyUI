@@ -1,0 +1,57 @@
+init_*:配置文件中的数据
+wnd_*:窗口显示的数据
+parent_*:父窗口的数据
+
+float布局：
+	if(init_width>0)
+		wnd_width = init_width;
+	else
+		wnd_width = parent_wnd_width - abs(init_width);
+	
+	if(align=="")
+		if(init_left>0)
+			wnd_left = parent_left + init_left;
+		else
+			wnd_left = parent_right - abs(init_left);
+	else if(align == "lefttop")
+		wnd_left = parent_left;
+		wnd_top = parent_top;
+	else if(align == "left")
+	else if(align == "leftfull")
+	else if(align == "leftbottom")
+	else if(align == "bottom")
+	else if(align == "bottomfull")
+	else if(align == "rightbottom")
+	else if(align == "right")
+	else if(align == "rightfull")
+	else if(align == "righttop")
+	else if(align == "top")
+	else if(align == "topfull")
+	else if(align == "center")
+	else if(align == "full")
+	
+	
+相对布局
+	child_align:暂时保留
+	minSize:暂时保留
+	
+	if(isFloat())
+		do_float_layout();
+	else
+		if(has_no_space)
+			set item empty and move to end
+		else
+			calc item pos and move item
+			
+	calcWindowPos:
+		if(init_width!=0)
+			wnd_width = init_width;
+		else
+			wnd_width = total_remain_width;
+		if(init_max_width!=0)
+			wnd_width = max(wnd_width, init_max_width);
+			
+	
+	
+	
+	

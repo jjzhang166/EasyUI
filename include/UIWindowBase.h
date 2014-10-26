@@ -1,5 +1,7 @@
 #pragma once
 
+class CWindowInfo;
+
 class EASYUI_API CUIWindowBase : public CMessageHandler
 {
 public:
@@ -18,6 +20,7 @@ public:
 	void SetParent(CUIWindowBase* pParent){ m_pParent = pParent; };
 	CUIWindowBase* GetRoot()const { return m_pRoot; };
 	HWND GetRootHandle() const;
+	CWindowInfo* GetWindowInfo() const ;
 	bool SetCapture();
 	bool ReleaseCapture();
 	virtual BOOL MoveWindow(const LPRECT lprc);
