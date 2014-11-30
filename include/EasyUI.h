@@ -64,6 +64,8 @@ class EASYUI_API CUIWindowBase;
 #include <UIButton.h>
 #include <UIEdit.h>
 #include <UIWebBrowser.h>
+#include <UICheckBoxGroup.h>
+#include <UICheckBox.h>
 #include <UIRadioGroup.h>
 #include <UIRadio.h>
 

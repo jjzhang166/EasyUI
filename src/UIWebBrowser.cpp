@@ -32,6 +32,12 @@ BOOL CUIWebBrowser::ParseAttribute( pugi::xml_node& node )
 }
 
 
+void CUIWebBrowser::SetVisible( bool bVisible ) 
+{
+	bVisible?m_pInternalWebBrowser->Show():m_pInternalWebBrowser->Hide();
+	__super::SetVisible(bVisible);
+}
+
 LRESULT CUIWebBrowser::dui_OnCreate( const CDuiMSG& duiMSG, BOOL& bHandled )
 {
 	m_pInternalWebBrowser->Show();

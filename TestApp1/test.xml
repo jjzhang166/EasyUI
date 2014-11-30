@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <window rect="-380,-260,380,260" align="center" caption="60" thickframe="8,8,8,8" minsize="380,260" bk_color="#FF585858">
-	<container align="topfull" height="-40" bk_color="#FF0000FF" name="test_body">
-		<container height="70" name="title_bar" bk_img="top_middle.bmp">
-			
+	<container align="topfull" height="-40" bk_img="img/main_toolbar_background.png">
+		<container height="70" name="title_bar" bk_color="#FFFFAA00">
 			<button rect="-129,0,43,21" over_caption="true" three_state_img="close_btn.bmp"/>
 			<button rect="-86,0,43,21" over_caption="true" three_state_img="close_btn.bmp"/>
 			<button rect="-43,0,43,21" name="sys_btn_close" over_caption="true" three_state_img="close_btn.bmp"/>
@@ -15,8 +14,8 @@
 		
 		<label align="center" size="300,78" bk_color="#FFFFFFFF"/>
 		<radio_group x="30" height="30" width="300">
-			<radio height="30" width="150" three_state_img="D:\\Project\\EasyUI\\TestApp1\\bkg_radio_3state.png" selected_img="D:\\Project\\EasyUI\\TestApp1\\img_radio.png" text="选项一" text_align="left" />
-			<radio x="150" height="30" width="150" three_state_img="D:\\Project\\EasyUI\\TestApp1\\bkg_radio_3state.png" selected_img="D:\\Project\\EasyUI\\TestApp1\\img_radio.png" text="选项二" text_align="left" />
+			<radio height="30" width="150" three_state_img="bkg_radio_3state.png" selected_img="img_radio.png" text="选项一" text_align="left" />
+			<radio x="150" height="30" width="150" three_state_img="bkg_radio_3state.png" selected_img="img_radio.png" text="选项二" text_align="left" />
 		</radio_container>
 	</hori_layout>
 </window>

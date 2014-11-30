@@ -20,11 +20,11 @@ public:
 	virtual void PaintText(Gdiplus::Graphics* pGraphics, const CRect& rcArea);
 
 	BEGIN_DUI_MSG_MAP(CUIRadio)
-		DUI_MSG_HANDLER(WM_LBUTTONUP,dui_OnLButtonUp)
+		DUI_MSG_HANDLER(WM_LBUTTONDOWN,dui_OnLButtonDown)
 		CHAIN_DUI_MSG_MAP(CUIButton)
 	END_DUI_MSG_MAP()
 
-	LRESULT dui_OnLButtonUp(const CDuiMSG& duiMsg,  BOOL& bHandled);
+	LRESULT dui_OnLButtonDown(const CDuiMSG& duiMsg,  BOOL& bHandled);
 
 	friend class CUIRadioGroup;
 

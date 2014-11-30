@@ -42,47 +42,48 @@ CUIWindowBase* CUIContainerWindowBase::BackwardFindChild(const std::function<boo
 CUIWindowBase* CUIContainerWindowBase::FindChild( LPCTSTR szName,int nFindFlag )
 {
 	std::function<bool(CUIWindowBase*)> pred = [szName](CUIWindowBase* pWindow)->bool{return pWindow->GetName()==szName;};
-	if(!(nFindFlag&eFindChild_Backward)){
+	if(!(nFindFlag&eFindChild_Backward)){	//forword
 		if(!(nFindFlag&eFindChild_Recursive)){
 			return ForwardFindChild(pred);
 		}
-		else{
-			CUIWindowBase* pWindow = this;
-			CUIWindowBase* pFindRes = NULL;
-			while(pWindow->IsContainer() && 
-				(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->ForwardFindChild(pred))
-				)
-			{
-				pWindow = pFindRes;
+		else{	//forword + recursive
+			if(!IsContainer()){
+				return NULL;
 			}
 
-			if(this == pWindow){
-				pWindow = NULL;
+			for(IterChildWndList iter = m_childWndList.begin(); iter != m_childWndList.end(); ++iter){
+				CUIWindowBase* pChildItem = (*iter);
+				if( pChildItem->GetName() == szName ){
+					return pChildItem;
+				}
+				else if(pChildItem->IsContainer()){
+					CUIWindowBase* pFindRes = dynamic_cast<CUIContainerWindowBase*>(pChildItem)->FindChild(szName, nFindFlag);
+					if(pFindRes){
+						return pFindRes;
+					}
+				}
 			}
-
-			return pWindow;
+			return NULL;
 		}
 	}
-	else{
+	else{	//backword
 		if(!(nFindFlag&eFindChild_Recursive)){
 			return BackwardFindChild(pred);
 		}
-		else
-		{
-			CUIWindowBase* pWindow = this;
-			CUIWindowBase* pFindRes = NULL;
-			while(pWindow->IsContainer() && 
-					(pFindRes = dynamic_cast<CUIContainerWindowBase*>(pWindow)->BackwardFindChild(pred))
-				)
-			{
-				pWindow = pFindRes;
+		else{	// backword + recursive
+			for(TypeChildWndList::const_reverse_iterator iter = m_childWndList.rbegin(); iter != m_childWndList.rend(); ++iter){
+				CUIWindowBase* pChildItem = (*iter);
+				if( pChildItem->GetName() == szName ){
+					return pChildItem;
+				}
+				else if(pChildItem->IsContainer()){
+					CUIWindowBase* pFindRes = dynamic_cast<CUIContainerWindowBase*>(pChildItem)->FindChild(szName, nFindFlag);
+					if(pFindRes){
+						return pFindRes;
+					}
+				}
 			}
-
-			if(this == pWindow){
-				pWindow = NULL;
-			}
-
-			return pWindow;
+			return NULL;
 		}
 	}
 }

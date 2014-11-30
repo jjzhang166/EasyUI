@@ -3,14 +3,16 @@
 class CInternalWebBrowser;
 
 
-class CUIWebBrowser
+class EASYUI_API CUIWebBrowser
 	: public CUIWindowBase
 {
 public:
 	CUIWebBrowser(CUIWindowBase* pParent);
 	~CUIWebBrowser();
 
+	virtual bool IsDUIWindow() const { return false; }
 	BOOL ParseAttribute( pugi::xml_node& node );
+	void SetVisible(bool bVisible);
 
 	BEGIN_DUI_MSG_MAP(CUIWebBrowser)
 		DUI_MSG_HANDLER(WM_CREATE, dui_OnCreate)

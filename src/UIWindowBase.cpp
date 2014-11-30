@@ -303,6 +303,15 @@ BOOL CUIWindowBase::MoveWindow( const int nLeft, const int nTop, const int nWidt
 	return TRUE;
 }
 
+void CUIWindowBase::SetVisible( bool bVisible )
+{
+	bool bNeedRedraw = (bVisible != m_bVisible);
+	m_bVisible = bVisible;
+	if(bNeedRedraw){
+		UIInvalidate();
+	}
+}
+
 bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes)
 {
 	const int nWidth = rcCtrlInit.Width()>0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();

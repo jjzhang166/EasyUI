@@ -8,8 +8,8 @@ public:
 	CUIWindowBase(CUIWindowBase* pParent);
 	~CUIWindowBase();
 
-	virtual BOOL IsContainer(){return FALSE;};
-	virtual BOOL IsDUIWindow(){return TRUE;};
+	virtual bool IsContainer() const {return false;};
+	virtual bool IsDUIWindow() const {return true;};
 
 	BEGIN_DUI_MSG_MAP(CUIWindowBase)
 	END_DUI_MSG_MAP()
@@ -39,6 +39,7 @@ public:
 	void GetMinSize(CSize& minSz) const { minSz = m_minSize; };
 	void GetMaxSize(CSize& maxSz) const { maxSz = m_maxSize; };
 	bool IsVisible() const { return m_bVisible; };
+	void SetVisible(bool bVisible);
 	void GetBkImg(std::wstring& strBkImg) const { strBkImg = m_strBkImg; };
 	void SetBkImg(const std::wstring& strBkImg) { m_strBkImg = strBkImg; };
 	Gdiplus::ARGB GetBkClr() const { return m_bkColor; };

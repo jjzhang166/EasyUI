@@ -6,7 +6,7 @@ public:
 	CUIContainerWindowBase(CUIWindowBase* pParent);
 	~CUIContainerWindowBase(void);
 
-	virtual BOOL IsContainer(){return TRUE;};
+	virtual bool IsContainer() const {return true;};
 
 	BEGIN_DUI_MSG_MAP(CUIContainerWindowBase)
 		DUI_MSG_HANDLER(WM_SIZE, dui_OnSize)
@@ -23,8 +23,8 @@ public:
 		eFindChild_Backward = 1,
 		eFindChild_Recursive = 2,
 	};
-	virtual CUIWindowBase* FindChild(LPCTSTR szName,int nFindFlag);
-	virtual CUIWindowBase* FindChild(const CPoint& pt,int nFindFlag);	
+	virtual CUIWindowBase* FindChild(LPCTSTR szName,int nFindFlag = eFindChild_Recursive);
+	virtual CUIWindowBase* FindChild(const CPoint& pt,int nFindFlag = eFindChild_Recursive);	
 
 	virtual BOOL ParseAttribute(pugi::xml_node& node);
 	virtual BOOL Create(pugi::xml_node& node);

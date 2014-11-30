@@ -18,12 +18,21 @@
 				}\
 			}
 
-#define DUI_BMCLICK_HANDLER(szCtrlName,func)\
+#define DUI_BUTTON_CLICK_HANDLER(szCtrlName,func)\
 			if(uMsg == BM_CLICK && duiMSG.pSrcCtrl && duiMSG.pSrcCtrl->GetName()==szCtrlName)\
 			{\
 				func(duiMSG,bHandled);\
 				if(bHandled){\
 				return TRUE;\
+				}\
+			}
+
+#define DUI_RADIO_SELECTED_HANDLER(szCtrlName,func)\
+			if(uMsg == DUIMSG_RADIO_SELECTED && duiMSG.pSrcCtrl && duiMSG.pSrcCtrl->GetName()==szCtrlName)\
+			{\
+				func(duiMSG, bHandled);\
+				if(bHandled){\
+					return TRUE;\
 				}\
 			}
 
@@ -52,6 +61,9 @@ public:
 
 #define WM_UIMESSAGE_START (WM_USER+1)
 #define WM_MOUSEENTER (WM_UIMESSAGE_START+1)
+
+#define DUIMSG_RADIO_SELECTED WM_UIMESSAGE_START+100
+#define DUIMSG_RADIO_UNSELECTED WM_UIMESSAGE_START+101
 
 class EASYUI_API CMessageHandler
 {

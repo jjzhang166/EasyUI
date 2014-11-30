@@ -10,7 +10,7 @@ public:
 
 	DECLARE_WND_CLASS(_T("SkinUI_HWND"));
 
-	virtual BOOL IsDUIWindow(){return TRUE;};
+	virtual bool IsDUIWindow() const {return TRUE;};
 	virtual BOOL ParseAttribute(pugi::xml_node& node);
 
 	virtual BOOL Create(HWND hWndParent, LPCTSTR szPath);

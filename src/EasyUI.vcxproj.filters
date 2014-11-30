@@ -102,6 +102,12 @@
     <ClInclude Include="..\include\WindowInfo.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\UICheckBox.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\UICheckBoxGroup.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -168,6 +174,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UICheckBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UICheckBoxGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

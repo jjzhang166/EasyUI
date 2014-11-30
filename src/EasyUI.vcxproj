@@ -82,6 +82,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BrushFactory.h" />
+    <ClInclude Include="..\include\UICheckBox.h" />
+    <ClInclude Include="..\include\UICheckBoxGroup.h" />
     <ClInclude Include="..\include\UIContainerWindow.h" />
     <ClInclude Include="..\include\UIRadio.h" />
     <ClInclude Include="..\include\UIContainerWindowBase.h" />
@@ -111,6 +113,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BrushFactory.cpp" />
+    <ClCompile Include="UICheckBox.cpp" />
+    <ClCompile Include="UICheckBoxGroup.cpp" />
     <ClCompile Include="UIContainerWindow.cpp" />
     <ClCompile Include="UIContainerWindowBase.cpp" />
     <ClCompile Include="UIButton.cpp" />

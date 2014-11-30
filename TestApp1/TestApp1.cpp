@@ -17,7 +17,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	easyApp->InitApp();
 
 	CMainWnd mainWnd;
-	mainWnd.Create(NULL,_T("D:\\Project\\EasyUI\\TestApp1\\test.xml"));
+	mainWnd.Create(NULL,_T("D:\\Project\\EasyUI\\output\\bin\\skin\\test.xml"));
 	mainWnd.ShowWindow(SW_SHOW);
 	mainWnd.UpdateWindow();
 

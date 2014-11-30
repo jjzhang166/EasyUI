@@ -131,18 +131,14 @@ void CUIRadio::PaintText( Gdiplus::Graphics* pGraphics, const CRect& rcArea )
 	__super::PaintText(pGraphics, rcDrawArea);
 }
 
-LRESULT CUIRadio::dui_OnLButtonUp( const CDuiMSG& duiMsg, BOOL& bHandled )
+LRESULT CUIRadio::dui_OnLButtonDown( const CDuiMSG& duiMsg, BOOL& bHandled )
 {
-	bool bPress = m_bPress;
-	BOOL bRes = CUIButton::dui_OnLButtonUp(duiMsg, bHandled);
+	BOOL bRes = CUIButton::dui_OnLButtonDown(duiMsg, bHandled);
 	bHandled = TRUE;
 
-	//it's a click happens
-	if(bPress){
-		//noly can become to selected, not become to unselected
-		if(!m_bSelected){
-			SetSelected();
-		}
+	//noly can become to selected, not become to unselected
+	if(!m_bSelected){
+		SetSelected();
 	}
 
 	return bRes;
@@ -152,6 +148,7 @@ bool CUIRadio::SetSelectedImpl()
 {
 	if(!m_bSelected){
 		m_bSelected = true;
+		SendDuiMessage(GetRoot(), DUIMSG_RADIO_SELECTED, this);
 		UIInvalidate();
 	}
 
@@ -162,6 +159,7 @@ bool CUIRadio::ClearSelectedImpl()
 {
 	if(m_bSelected){
 		m_bSelected = false;
+		SendDuiMessage(GetRoot(), DUIMSG_RADIO_UNSELECTED, this);
 		UIInvalidate();
 	}
 

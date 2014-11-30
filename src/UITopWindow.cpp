@@ -127,9 +127,7 @@ LRESULT CUITopWindow::OnMouseMove( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lPar
 		GetCaptureWindow()->SendDuiMessage(WM_MOUSEMOVE,this);
 	}
 	else{
-		CPoint ptCursor;
-		GetCursorPos(&ptCursor);
-		ScreenToClient(&ptCursor);
+		CPoint ptCursor(GET_X_LPARAM(lParam),GET_Y_LPARAM(lParam));
 		CUIWindowBase* pNewHoverWindow = FindChild(ptCursor,eFindChild_Backward|eFindChild_Recursive);
 		CUIWindowBase* pOldHoverWindow = GetHoverWindow();
 		if(pNewHoverWindow != pOldHoverWindow){
