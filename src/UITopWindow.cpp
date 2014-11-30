@@ -88,7 +88,7 @@ LRESULT CUITopWindow::OnCreate( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	::GetMonitorInfo(hMonitor,&monitorInfo);
 	CRect rcWork = monitorInfo.rcWork;
 	CRect rcWnd;
-	CalcWindowFloatPos(rcWork,m_rcInit,m_strAlign,rcWnd);
+	CalcWindowFloatPos(rcWork,m_rcInit,m_wndAlign,rcWnd);
 
 	m_rcWnd = rcWnd;
 	m_rcWnd.MoveToXY(0,0);

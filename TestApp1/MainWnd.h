@@ -25,6 +25,7 @@ public:
 		CUIWebBrowser* pwb1 = (CUIWebBrowser*)((CUIContainerWindowBase*)GetRoot())->FindChild(_T("wb1"), eFindChild_Recursive);
 		CUIWebBrowser* pwb2 = (CUIWebBrowser*)((CUIContainerWindowBase*)GetRoot())->FindChild(_T("wb2"), eFindChild_Recursive);
 		CUIWebBrowser* pwb3 = (CUIWebBrowser*)((CUIContainerWindowBase*)GetRoot())->FindChild(_T("wb3"), eFindChild_Recursive);
+		pwb1->DelayCreate();
 		pwb1->SetVisible(true);
 		pwb2->SetVisible(false);
 		pwb3->SetVisible(false);
@@ -39,6 +40,7 @@ public:
 		CUIWebBrowser* pwb2 = (CUIWebBrowser*)((CUIContainerWindowBase*)GetRoot())->FindChild(_T("wb2"), eFindChild_Recursive);
 		CUIWebBrowser* pwb3 = (CUIWebBrowser*)((CUIContainerWindowBase*)GetRoot())->FindChild(_T("wb3"), eFindChild_Recursive);
 		pwb1->SetVisible(false);
+		pwb2->DelayCreate();
 		pwb2->SetVisible(true);
 		pwb3->SetVisible(false);
 
@@ -54,6 +56,7 @@ public:
 
 		pwb1->SetVisible(false);
 		pwb2->SetVisible(false);
+		pwb3->DelayCreate();
 		pwb3->SetVisible(true);
 		
 

@@ -6,6 +6,7 @@ CUIWindowBase::CUIWindowBase(CUIWindowBase* pParent)
 	: m_pParent(pParent)
 	, m_pRoot(pParent?pParent->m_pRoot:this)
 	, m_bFloat(false)
+	, m_wndAlign(eAlign_NULL)
 	, m_bVisible(true)
 	, m_bPlaceHolder(false)
 	, m_bkColor(Gdiplus::Color::Red)
@@ -44,8 +45,8 @@ void CUIWindowBase::SetMultiLine( bool bMultiLine )
 
 void CUIWindowBase::SetTextAlign(LPCTSTR szTextAlign)
 {
-	m_strTextAlign = szTextAlign;
-	CalcTextFormat(m_strTextAlign, m_stringFormat);
+	m_strTextAlign = szTextAlign?szTextAlign:_T("");
+	CvtTextAlign(m_strTextAlign, m_stringFormat);
 }
 
 BOOL CUIWindowBase::Create( pugi::xml_node& node )
@@ -113,7 +114,7 @@ BOOL CUIWindowBase::ParseAttribute( pugi::xml_node& node )
 
 	attr = node.attribute(_T("align"));
 	if(attr){
-		m_strAlign = attr.as_string();
+		m_wndAlign = CvtAlign(attr.as_string());
 	}
 
 	attr = node.attribute(_T("padding"));
@@ -312,96 +313,210 @@ void CUIWindowBase::SetVisible( bool bVisible )
 	}
 }
 
-bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes)
+int CUIWindowBase::CvtAlign( const std::wstring& strAlign )
+{
+	//lefttop,left,leftfull,leftbottom,bottom,bottomfull,rightbottom,right,rightfull,righttop,top,topfull,center,full
+	const int nLen = strAlign.size();
+
+	int nAlign = eAlign_NULL;
+	switch(nLen){
+
+	case 0://null
+		nAlign = eAlign_NULL;
+		break;
+
+	case 3://top
+		assert(strAlign==_T("top"));
+		nAlign = eAlign_Top;
+		break;
+
+	case 4://left,full
+		if(strAlign.at(0)==_T('l')){
+			assert(strAlign==_T("left"));
+			nAlign = eAlign_Left;
+		}
+		else{
+			assert(strAlign==_T("full"));
+			nAlign = eAlign_Full;
+		}
+		break;
+
+	case 5://right
+		assert(strAlign==_T("right"));
+		nAlign = eAlign_Right;
+		break;
+
+	case 6://bottom,center
+		if(strAlign.at(0) == _T('b')){
+			assert(strAlign==_T("bottom"));
+			nAlign = eAlign_Bottom;
+		}
+		else{
+			assert(strAlign==_T("center"));
+			nAlign = eAlign_Center;
+		}
+		break;
+
+	case 7://lefttop,topfull
+		if(strAlign.at(0) == _T('l')){
+			assert(strAlign==_T("lefttop"));
+			nAlign = eAlign_Left|eAlign_Top;
+		}
+		else{
+			assert(strAlign==_T("topfull"));
+			nAlign = eAlign_Top|eAlign_Full;
+		}
+		break;
+
+	case 8://leftfull,righttop
+		if(strAlign.at(0)==_T('l')){
+			assert(strAlign==_T("leftfull"));
+			nAlign = eAlign_Left|eAlign_Full;
+		}
+		else{
+			assert(strAlign==_T("righttop"));
+			nAlign = eAlign_Right|eAlign_Top;
+		}
+		break;
+
+	case 9://rightfull
+		assert(strAlign==_T("rightfull"));
+		nAlign = eAlign_Right|eAlign_Full;
+		break;
+
+	case 10://leftbottom,bottomfull
+		if(strAlign.at(0) == _T('l')){
+			assert(strAlign==_T("leftbottom"));
+			nAlign = eAlign_Left|eAlign_Bottom;
+		}
+		else{
+			assert(strAlign==_T("bottomfull"));
+			nAlign = eAlign_Bottom|eAlign_Full;
+		}
+		break;
+
+	case 11://rightbottom
+		assert(strAlign==_T("rightbottom"));
+		nAlign = eAlign_Right|eAlign_Bottom;
+		break;
+	default:
+		assert(false);
+		break;
+	}
+
+	return nAlign;
+}
+
+bool CUIWindowBase::CalcWindowFloatPos( const CRect& rcParent, const CRect& rcCtrlInit, const int wndAlign, CRect& rcRes)
 {
 	const int nWidth = rcCtrlInit.Width()>0 ? rcCtrlInit.Width() : rcParent.Width() + rcCtrlInit.Width();
 	const int nHeight = rcCtrlInit.Height()>0 ? rcCtrlInit.Height() : rcParent.Height() + rcCtrlInit.Height();
-	if(strAlign.empty()){
+	switch(wndAlign){
+
+	case eAlign_NULL:
 		rcRes.left = (rcCtrlInit.left>=0 ? rcParent.left : rcParent.right)+rcCtrlInit.left;
 		rcRes.top = (rcCtrlInit.top>=0 ? rcParent.top : rcParent.bottom)+rcCtrlInit.top;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("lefttop")){
+		break;
+
+	case eAlign_Left|eAlign_Top:
 		rcRes.left = rcParent.left;
 		rcRes.top = rcParent.top;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("left")){
+		break;
+
+	case eAlign_Left:
 		rcRes.left = rcParent.left;
 		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
 		rcRes.right = rcRes.left + nWidth;
-		rcRes.bottom = rcRes.top + nHeight;		
-	}
-	else if(strAlign == _T("leftfull")){
+		rcRes.bottom = rcRes.top + nHeight;	
+		break;
+
+	case eAlign_Left|eAlign_Full:
 		rcRes.left = rcParent.left;
 		rcRes.top = rcParent.top;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.bottom = rcParent.bottom;
-	}
-	else if(strAlign == _T("leftbottom")){
+		break;
+
+	case eAlign_Left|eAlign_Bottom:
 		rcRes.left = rcCtrlInit.left;
 		rcRes.bottom = rcParent.bottom;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.top = rcRes.bottom - nHeight;
-	}
-	else if(strAlign == _T("bottom")){
+		break;
+
+	case eAlign_Bottom:
 		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
 		rcRes.bottom = rcParent.bottom;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.top = rcRes.bottom - nHeight;
-	}
-	else if(strAlign == _T("bottomfull")){
+		break;
+
+	case eAlign_Bottom|eAlign_Full:
 		rcRes.left = rcParent.left;
 		rcRes.right = rcParent.right;
 		rcRes.bottom = rcParent.bottom;
 		rcRes.top = rcRes.bottom - nHeight;
-	}
-	else if(strAlign == _T("rightbottom")){
+		break;
+
+	case eAlign_Right|eAlign_Bottom:
 		rcRes.right = rcParent.right;
 		rcRes.bottom = rcParent.bottom;
 		rcRes.left = rcRes.right - nWidth;
 		rcRes.top = rcRes.bottom - nHeight;
-	}
-	else if(strAlign == _T("right")){
+		break;
+
+	case eAlign_Right:
 		rcRes.right = rcParent.right;
 		rcRes.left = rcRes.right - nWidth;
 		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("rightfull")){
+		break;
+
+	case eAlign_Right|eAlign_Full:
 		rcRes.top = rcParent.top;
 		rcRes.bottom = rcParent.bottom;
 		rcRes.right = rcParent.right;
 		rcRes.left = rcRes.right - nWidth;
-	}
-	else if(strAlign == _T("righttop")){
+		break;
+
+	case eAlign_Right|eAlign_Top:
 		rcRes.top = rcParent.top;
 		rcRes.right = rcParent.right;
 		rcRes.left = rcRes.right - nWidth;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("top")){
+		break;
+
+	case eAlign_Top:
 		rcRes.top = rcParent.top;
 		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("topfull")){
+		break;
+
+	case eAlign_Top|eAlign_Full:
 		rcRes.left = rcParent.left;
 		rcRes.top = rcParent.top;
 		rcRes.right = rcParent.right;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("center")){
+		break;
+
+	case eAlign_Center:
 		rcRes.left = rcParent.left + (rcParent.Width()-nWidth)/2;
 		rcRes.top = rcParent.top + (rcParent.Height()-nHeight)/2;
 		rcRes.right = rcRes.left + nWidth;
 		rcRes.bottom = rcRes.top + nHeight;
-	}
-	else if(strAlign == _T("full")){
+		break;
+
+	case eAlign_Full:
 		rcRes = rcParent;
+		break;
+
+	default:
+		assert(false);
 	}
 	
 	return true;
@@ -416,7 +531,7 @@ bool CUIWindowBase::CalcWindowFloatPos(CRect& rcRes) const
 	else{
 		ATLASSERT(false);
 	}
-	return CalcWindowFloatPos(rcParent, m_rcInit, m_strAlign, rcRes);
+	return CalcWindowFloatPos(rcParent, m_rcInit, m_wndAlign, rcRes);
 }
 
 bool CUIWindowBase::CalcWindowPos( const CRect& rcSpace, CRect& rcRes ) const
@@ -442,46 +557,72 @@ bool CUIWindowBase::CalcWindowPos( const CRect& rcSpace, CRect& rcRes ) const
 	return true;
 }
 
-bool CUIWindowBase::CalcTextFormat( const std::wstring strTextAlign, Gdiplus::StringFormat& format )
+bool CUIWindowBase::CvtTextAlign( const std::wstring strTextAlign, Gdiplus::StringFormat& format )
 {
-	if(strTextAlign.empty() || strTextAlign == _T("lefttop")){
+	//lefttop,left,leftbottom,bottom,rightbottom,right£¬righttop£¬top£¬center
+	const int nLen = strTextAlign.length();
+
+	switch(nLen){
+
+	case 7://lefttop
+		assert(strTextAlign == _T("lefttop"));
+		//break;//countinue
+	case 0://null
 		format.SetAlignment(Gdiplus::StringAlignmentNear);
 		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
-	}
-	else if(strTextAlign == _T("left")){
-		format.SetAlignment(Gdiplus::StringAlignmentNear);
-		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-	}
-	else if(strTextAlign == _T("leftbottom")){
-		format.SetAlignment(Gdiplus::StringAlignmentNear);
-		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
-	}
-	else if(strTextAlign == _T("bottom")){
-		format.SetAlignment(Gdiplus::StringAlignmentCenter);
-		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
-	}
-	else if(strTextAlign == _T("rightbottom")){
-		format.SetAlignment(Gdiplus::StringAlignmentFar);
-		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
-	}
-	else if(strTextAlign == _T("right")){
-		format.SetAlignment(Gdiplus::StringAlignmentFar);
-		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-	}
-	else if(strTextAlign == _T("righttop")){
-		format.SetAlignment(Gdiplus::StringAlignmentFar);
-		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
-	}
-	else if(strTextAlign == _T("top")){
+		break;
+
+	case 3://top
+		assert(strTextAlign == _T("top"));
 		format.SetAlignment(Gdiplus::StringAlignmentCenter);
 		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
-	}
-	else if(strTextAlign == _T("center")){
-		format.SetAlignment(Gdiplus::StringAlignmentCenter);
+		break;
+
+	case 4://left,
+		assert(strTextAlign == _T("left"));
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
 		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
-	}
-	else{
-		ATLASSERT(FALSE);
+		break;
+
+	case 5://right
+		assert(strTextAlign == _T("right"));
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+		break;
+
+	case 6://bottom,center
+		if(strTextAlign.at(0) == _T('b')){
+			assert(strTextAlign == _T("bottom"));
+			format.SetAlignment(Gdiplus::StringAlignmentCenter);
+			format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+		}
+		else{
+			assert(strTextAlign == _T("center"));
+			format.SetAlignment(Gdiplus::StringAlignmentCenter);
+			format.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+		}
+		break;
+	
+	case 8://righttop
+		assert(strTextAlign == _T("righttop"));
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentNear);
+		break;
+
+	case 10://leftbottom
+		assert(strTextAlign == _T("leftbottom"));
+		format.SetAlignment(Gdiplus::StringAlignmentNear);
+		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+		break;
+
+	case 11://rightbottom
+		assert(strTextAlign == _T("rightbottom"));
+		format.SetAlignment(Gdiplus::StringAlignmentFar);
+		format.SetLineAlignment(Gdiplus::StringAlignmentFar);
+		break;
+
+	default:
+		assert(false);
 	}
 
 	return true;

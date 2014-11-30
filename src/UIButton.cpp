@@ -54,7 +54,7 @@ LRESULT CUIButton::dui_OnMouseLeave(const CDuiMSG& duiMsg ,  BOOL& bHandled)
 
 LRESULT CUIButton::dui_OnLButtonDown( const CDuiMSG& duiMsg,  BOOL& bHandled)
 {
-	ATLASSERT(m_bHover && !m_bPress);
+	//ATLASSERT(m_bHover && !m_bPress);
 
 	m_bPress = true;
 	SetCapture();

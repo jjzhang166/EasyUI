@@ -2,6 +2,16 @@
 
 class CWindowInfo;
 
+enum eAlign{
+	eAlign_NULL		= 0,
+	eAlign_Left		= 1,
+	eAlign_Right	= 2,
+	eAlign_Top		= 4,
+	eAlign_Bottom	= 8,
+	eAlign_Center	= 16,
+	eAlign_Full		= 32,
+};
+
 class EASYUI_API CUIWindowBase : public CMessageHandler
 {
 public:
@@ -67,14 +77,15 @@ public:
 	virtual BOOL Create(pugi::xml_node& node);
 	virtual BOOL ParseAttribute(pugi::xml_node& node);
 
+	static int CvtAlign(const std::wstring& strAlign);
 	//绝对布局
-	static bool CalcWindowFloatPos(const CRect& rcParent, const CRect& rcCtrlInit, const std::wstring& strAlign, CRect& rcRes);
+	static bool CalcWindowFloatPos(const CRect& rcParent, const CRect& rcCtrlInit, const int wndAlign, CRect& rcRes);
 	bool CalcWindowFloatPos(CRect& rcRes) const;
 	//相对布局
 	bool CalcWindowPos(const CRect& rcSpace, CRect& rcRes) const ;
 
 	//文字对齐方式
-	static bool CalcTextFormat(const std::wstring strTextAlign, Gdiplus::StringFormat& format);
+	static bool CvtTextAlign(const std::wstring strTextAlign, Gdiplus::StringFormat& format);
 
 	//绘制
 	virtual void DoPaint(Gdiplus::Graphics* pGraphics);
@@ -97,7 +108,7 @@ protected:
 	CRect			m_rcMargin;
 	CRect			m_rcPadding;
 	bool			m_bFloat;
-	std::wstring	m_strAlign;
+	int				m_wndAlign;
 
 	//绘制
 	bool			m_bVisible;

@@ -16,7 +16,7 @@
 #include <GdiPlus.h>
 #pragma comment(lib,"gdiplus.lib")
 
-//stl headers
+#include <assert.h>
 #include <string>
 #include <vector>
 #include <map>
